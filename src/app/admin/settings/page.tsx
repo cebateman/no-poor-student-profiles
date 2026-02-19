@@ -25,7 +25,7 @@ export default function AdminSettingsPage() {
         });
         if (res.status === 401) {
           localStorage.removeItem("npa_token");
-          router.replace("/admin/login");
+          router.replace("/login");
           return;
         }
         const data = await res.json();
@@ -66,7 +66,7 @@ export default function AdminSettingsPage() {
 
       if (res.status === 401) {
         localStorage.removeItem("npa_token");
-        router.replace("/admin/login");
+        router.replace("/login");
         return;
       }
 

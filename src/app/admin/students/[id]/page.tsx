@@ -100,7 +100,7 @@ export default function StudentDetailPage() {
 
       if (res.status === 401) {
         localStorage.removeItem("npa_token");
-        router.replace("/admin/login");
+        router.replace("/login");
         return;
       }
 
@@ -159,7 +159,7 @@ export default function StudentDetailPage() {
 
       if (res.status === 401) {
         localStorage.removeItem("npa_token");
-        router.replace("/admin/login");
+        router.replace("/login");
         return;
       }
 
@@ -268,7 +268,7 @@ export default function StudentDetailPage() {
       {/* Breadcrumb */}
       <div style={{ marginBottom: "24px" }}>
         <Link
-          href="/admin"
+          href="/"
           style={{
             color: "#6b7280",
             textDecoration: "none",
@@ -595,7 +595,7 @@ export default function StudentDetailPage() {
           <h2 style={{ ...sectionTitleStyle, marginBottom: 0 }}>{t("snapshot.title")}</h2>
           <button
             onClick={() =>
-              router.push(`/admin/students/${studentId}/snapshot`)
+              router.push(`/students/${studentId}/snapshot`)
             }
             style={{
               padding: "8px 16px",

@@ -128,7 +128,7 @@ export default function SnapshotFormPage() {
 
       if (res.status === 401) {
         localStorage.removeItem("npa_token");
-        router.replace("/admin/login");
+        router.replace("/login");
         return;
       }
 
@@ -137,7 +137,7 @@ export default function SnapshotFormPage() {
         throw new Error(data.error || t("snapshotForm.failedCreate"));
       }
 
-      router.push(`/admin/students/${studentId}`);
+      router.push(`/students/${studentId}`);
     } catch (err) {
       setError(
         err instanceof Error ? err.message : t("snapshotForm.failedCreate")
@@ -151,7 +151,7 @@ export default function SnapshotFormPage() {
       {/* Breadcrumb */}
       <div style={{ marginBottom: "24px" }}>
         <Link
-          href="/admin"
+          href="/"
           style={{
             color: "#6b7280",
             textDecoration: "none",
@@ -164,7 +164,7 @@ export default function SnapshotFormPage() {
           /
         </span>
         <Link
-          href={`/admin/students/${studentId}`}
+          href={`/students/${studentId}`}
           style={{
             color: "#6b7280",
             textDecoration: "none",
@@ -571,7 +571,7 @@ export default function SnapshotFormPage() {
             </button>
             <button
               type="button"
-              onClick={() => router.push(`/admin/students/${studentId}`)}
+              onClick={() => router.push(`/students/${studentId}`)}
               style={{
                 padding: "10px 24px",
                 border: "1px solid #d1d5db",

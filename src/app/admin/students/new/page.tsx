@@ -56,7 +56,7 @@ export default function NewStudentPage() {
 
       if (res.status === 401) {
         localStorage.removeItem("npa_token");
-        router.replace("/admin/login");
+        router.replace("/login");
         return;
       }
 
@@ -68,7 +68,7 @@ export default function NewStudentPage() {
         return;
       }
 
-      router.push(`/admin/students/${data.id}`);
+      router.push(`/students/${data.id}`);
     } catch {
       setError(t("common.networkError"));
       setLoading(false);
@@ -80,7 +80,7 @@ export default function NewStudentPage() {
       {/* Breadcrumb */}
       <div style={{ marginBottom: "24px" }}>
         <Link
-          href="/admin"
+          href="/"
           style={{
             color: "#6b7280",
             textDecoration: "none",
@@ -306,7 +306,7 @@ export default function NewStudentPage() {
             </button>
             <button
               type="button"
-              onClick={() => router.push("/admin")}
+              onClick={() => router.push("/")}
               style={{
                 padding: "10px 24px",
                 border: "1px solid #d1d5db",

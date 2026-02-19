@@ -40,7 +40,7 @@ export default function AdminLoginPage() {
       }
 
       localStorage.setItem("npa_token", data.token);
-      router.replace("/admin");
+      router.replace("/");
     } catch {
       setError(t("login.networkError", locale));
       setLoading(false);

@@ -35,7 +35,7 @@ export default function ManageAdminsPage() {
       const res = await fetch("/api/admin/admins", { headers: authHeaders() });
       if (res.status === 401) {
         localStorage.removeItem("npa_token");
-        router.replace("/admin/login");
+        router.replace("/login");
         return;
       }
       if (!res.ok) throw new Error();
@@ -70,7 +70,7 @@ export default function ManageAdminsPage() {
 
       if (res.status === 401) {
         localStorage.removeItem("npa_token");
-        router.replace("/admin/login");
+        router.replace("/login");
         return;
       }
 

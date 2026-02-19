@@ -54,7 +54,7 @@ export default function AdminDashboardPage() {
 
       if (res.status === 401) {
         localStorage.removeItem("npa_token");
-        router.replace("/admin/login");
+        router.replace("/login");
         return;
       }
 
@@ -112,7 +112,7 @@ export default function AdminDashboardPage() {
           </p>
         </div>
         <button
-          onClick={() => router.push("/admin/students/new")}
+          onClick={() => router.push("/students/new")}
           style={{
             padding: "10px 20px",
             border: "none",
@@ -256,7 +256,7 @@ export default function AdminDashboardPage() {
                 return (
                   <tr
                     key={student.id}
-                    onClick={() => router.push(`/admin/students/${student.id}`)}
+                    onClick={() => router.push(`/students/${student.id}`)}
                     style={{
                       borderBottom: "1px solid #e5e7eb",
                       cursor: "pointer",

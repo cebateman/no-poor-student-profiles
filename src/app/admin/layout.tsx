@@ -14,8 +14,8 @@ function AdminLayoutInner({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const token = localStorage.getItem("npa_token");
-    if (!token && pathname !== "/admin/login") {
-      router.replace("/admin/login");
+    if (!token && pathname !== "/login") {
+      router.replace("/login");
     } else {
       setAuthenticated(true);
     }
@@ -34,7 +34,7 @@ function AdminLayoutInner({ children }: { children: React.ReactNode }) {
       // Proceed with local cleanup even if the API call fails
     }
     localStorage.removeItem("npa_token");
-    router.replace("/admin/login");
+    router.replace("/login");
   }
 
   if (checking) {
@@ -56,7 +56,7 @@ function AdminLayoutInner({ children }: { children: React.ReactNode }) {
   }
 
   // Login page renders without the sidebar
-  if (pathname === "/admin/login") {
+  if (pathname === "/login") {
     return <>{children}</>;
   }
 
@@ -65,10 +65,10 @@ function AdminLayoutInner({ children }: { children: React.ReactNode }) {
   }
 
   const navItems = [
-    { href: "/admin", label: t("nav.dashboard"), icon: "\u2302" },
-    { href: "/admin/students/new", label: t("nav.addStudent"), icon: "+" },
-    { href: "/admin/settings", label: t("nav.siteSettings"), icon: "\u2699" },
-    { href: "/admin/admins", label: t("nav.manageAdmins"), icon: "\u263A" },
+    { href: "/", label: t("nav.dashboard"), icon: "\u2302" },
+    { href: "/students/new", label: t("nav.addStudent"), icon: "+" },
+    { href: "/settings", label: t("nav.siteSettings"), icon: "\u2699" },
+    { href: "/admins", label: t("nav.manageAdmins"), icon: "\u263A" },
   ];
 
   return (
@@ -103,7 +103,7 @@ function AdminLayoutInner({ children }: { children: React.ReactNode }) {
           }}
         >
           <Link
-            href="/admin"
+            href="/"
             style={{ textDecoration: "none" }}
           >
             <h1
@@ -133,8 +133,8 @@ function AdminLayoutInner({ children }: { children: React.ReactNode }) {
         <nav style={{ flex: 1, padding: "12px 8px" }}>
           {navItems.map((item) => {
             const isActive =
-              item.href === "/admin"
-                ? pathname === "/admin"
+              item.href === "/"
+                ? pathname === "/"
                 : pathname.startsWith(item.href);
 
             return (
