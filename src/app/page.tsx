@@ -91,7 +91,7 @@ export default function HomePage() {
             young women whose futures you help shape.
           </p>
           <a
-            href="https://nopoorafrica.org/donate/"
+            href="https://www.nopoorafrica.org/"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 bg-npa-accent text-npa-dark px-8 py-3.5 rounded-full font-semibold text-lg hover:opacity-90 transition-opacity duration-200 shadow-lg"
@@ -221,7 +221,7 @@ export default function HomePage() {
             reach her dreams.
           </p>
           <a
-            href="https://nopoorafrica.org/donate/"
+            href="https://www.nopoorafrica.org/"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 bg-npa-green text-white px-8 py-3.5 rounded-full font-semibold text-lg hover:bg-npa-green-light transition-colors duration-200 shadow-lg"
@@ -256,7 +256,7 @@ export default function HomePage() {
             </div>
             <div className="text-center md:text-right">
               <a
-                href="https://nopoorafrica.org"
+                href="https://www.nopoorafrica.org"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-npa-green-lighter hover:text-white transition-colors text-sm"
