@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import { useRouter } from "next/navigation";
 
 interface Student {
@@ -35,11 +35,7 @@ export default function AdminDashboardPage() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
 
-  useEffect(() => {
-    fetchStudents();
-  }, [statusFilter]);
-
-  async function fetchStudents() {
+  const fetchStudents = useCallback(async function() {
     setLoading(true);
     setError("");
     try {
@@ -71,7 +67,11 @@ export default function AdminDashboardPage() {
     } finally {
       setLoading(false);
     }
-  }
+  }, [statusFilter, router]);
+
+  useEffect(() => {
+    fetchStudents();
+  }, [fetchStudents]);
 
   const filteredStudents = useMemo(() => {
     if (!searchQuery.trim()) return students;
