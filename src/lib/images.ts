@@ -1,12 +1,29 @@
 import sharp from "sharp";
-import path from "path";
-import fs from "fs/promises";
 import { v4 as uuid } from "uuid";
+import { getSupabase, STORAGE_BUCKET } from "./supabase";
 
-const UPLOAD_DIR = path.join(process.cwd(), "public", "uploads", "students");
+async function uploadToSupabase(
+  buffer: Buffer,
+  path: string
+): Promise<string> {
+  const supabase = getSupabase();
 
-export async function ensureDir(dir: string) {
-  await fs.mkdir(dir, { recursive: true });
+  const { error } = await supabase.storage
+    .from(STORAGE_BUCKET)
+    .upload(path, buffer, {
+      contentType: "image/jpeg",
+      upsert: true,
+    });
+
+  if (error) {
+    throw new Error(`Failed to upload image: ${error.message}`);
+  }
+
+  const { data } = supabase.storage
+    .from(STORAGE_BUCKET)
+    .getPublicUrl(path);
+
+  return data.publicUrl;
 }
 
 export async function processAndSaveImage(
@@ -15,32 +32,29 @@ export async function processAndSaveImage(
   year?: number
 ): Promise<{ thumbnail: string; full: string }> {
   const id = uuid().slice(0, 8);
-  const subDir = year
-    ? path.join(UPLOAD_DIR, studentId, String(year))
-    : path.join(UPLOAD_DIR, studentId);
-  await ensureDir(subDir);
-
-  const thumbFilename = `thumb_${id}.jpg`;
-  const fullFilename = `full_${id}.jpg`;
+  const basePath = year
+    ? `${studentId}/${year}`
+    : `${studentId}`;
 
   // Thumbnail: 400x400 square crop
-  await sharp(buffer)
+  const thumbBuffer = await sharp(buffer)
     .resize(400, 400, { fit: "cover", position: "centre" })
     .jpeg({ quality: 85 })
-    .toFile(path.join(subDir, thumbFilename));
+    .toBuffer();
 
   // Full: max 800x1000
-  await sharp(buffer)
+  const fullBuffer = await sharp(buffer)
     .resize(800, 1000, { fit: "inside", withoutEnlargement: true })
     .jpeg({ quality: 90 })
-    .toFile(path.join(subDir, fullFilename));
+    .toBuffer();
 
-  const urlBase = year
-    ? `/uploads/students/${studentId}/${year}`
-    : `/uploads/students/${studentId}`;
+  const [thumbnailUrl, fullUrl] = await Promise.all([
+    uploadToSupabase(thumbBuffer, `${basePath}/thumb_${id}.jpg`),
+    uploadToSupabase(fullBuffer, `${basePath}/full_${id}.jpg`),
+  ]);
 
   return {
-    thumbnail: `${urlBase}/${thumbFilename}`,
-    full: `${urlBase}/${fullFilename}`,
+    thumbnail: thumbnailUrl,
+    full: fullUrl,
   };
 }

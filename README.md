@@ -14,7 +14,7 @@ A database-backed web application for managing and showcasing student profiles f
 - **Dynamic age & grade tracking** — Age is computed from date of birth; grade advances automatically each year from enrollment data. No manual updates needed.
 - **Annual snapshots** — Each year, staff add a new "snapshot" for each girl (interview story, photo, dream career, academic notes) without overwriting prior years. This builds a journey timeline.
 - **Flexible data fields** — The `extraData` JSON column on snapshots lets you store new types of information (test scores, club memberships, etc.) without schema changes.
-- **Image processing** — Photos are automatically resized to thumbnail (400x400) and full (800x1000) versions on upload.
+- **Image processing** — Photos are automatically resized to thumbnail (400x400) and full (800x1000) versions via Sharp, stored in Supabase Storage.
 - **Privacy-first** — `is_public` toggle per student, `noindex` meta tags, academic notes hidden from public view.
 
 ## Tech Stack
@@ -23,40 +23,110 @@ A database-backed web application for managing and showcasing student profiles f
 |-------|-----------|
 | Framework | Next.js 14 (App Router) |
 | Language | TypeScript |
-| Database | SQLite (dev) / PostgreSQL (production) |
+| Database | PostgreSQL (Supabase) |
 | ORM | Prisma 5 |
+| Image Storage | Supabase Storage |
 | Styling | Tailwind CSS |
 | Auth | JWT (bcrypt password hashing) |
 | Image Processing | Sharp |
+| Hosting | Vercel |
 
-## Getting Started
+## Deploy to Vercel + Supabase (Step-by-Step)
 
-### Prerequisites
+### Step 1: Create a Supabase Project
 
-- Node.js 18+
-- npm
+1. Go to [supabase.com](https://supabase.com) and sign up (free tier is plenty).
+2. Click **New Project**, give it a name (e.g., `npa-students`), set a database password, and choose a region.
+3. Wait for the project to finish provisioning (~2 minutes).
 
-### Setup
+### Step 2: Get Your Supabase Credentials
+
+From your Supabase Dashboard:
+
+**Database connection strings** (Settings > Database > Connection string):
+- Copy the **URI** — this is your `DATABASE_URL` (use the "Transaction" / port 6543 version for pooled connections)
+- Copy the **Direct** URI — this is your `DIRECT_URL` (port 5432, used by Prisma for migrations)
+
+**API keys** (Settings > API):
+- Copy **Project URL** → this is `NEXT_PUBLIC_SUPABASE_URL`
+- Copy **service_role key** (under "Project API keys") → this is `SUPABASE_SERVICE_ROLE_KEY`
+
+### Step 3: Create the Storage Bucket
+
+1. In Supabase Dashboard, go to **Storage** (left sidebar).
+2. Click **New Bucket**.
+3. Name it `student-photos`.
+4. Toggle **Public bucket** to ON (so images can be displayed on the website).
+5. Click **Create bucket**.
+
+### Step 4: Run Database Migration
+
+From your local machine:
 
 ```bash
-# 1. Clone the repository
+# Clone and install
 git clone <repo-url>
 cd no-poor-student-profiles
-
-# 2. Install dependencies
 npm install
 
-# 3. Create environment file
+# Create .env with your Supabase credentials
 cp .env.example .env
-# Edit .env with your settings
+# Edit .env — fill in DATABASE_URL, DIRECT_URL, NEXT_PUBLIC_SUPABASE_URL,
+# SUPABASE_SERVICE_ROLE_KEY, and a strong JWT_SECRET
 
-# 4. Run database migration
-npm run db:migrate
+# Push the schema to your Supabase database
+npx prisma migrate deploy
 
-# 5. Seed the database with sample data + admin user
+# Seed with sample data + admin user
+npm run db:seed
+```
+
+### Step 5: Deploy to Vercel
+
+1. Push this repo to GitHub (if not already).
+2. Go to [vercel.com](https://vercel.com) and sign up / log in.
+3. Click **Add New Project** → Import your GitHub repository.
+4. Under **Environment Variables**, add all 6 variables from your `.env`:
+
+   | Variable | Value |
+   |----------|-------|
+   | `DATABASE_URL` | `postgresql://postgres.[ref]:[pw]@...pooler.supabase.com:6543/postgres?pgbouncer=true` |
+   | `DIRECT_URL` | `postgresql://postgres.[ref]:[pw]@...pooler.supabase.com:5432/postgres` |
+   | `NEXT_PUBLIC_SUPABASE_URL` | `https://[ref].supabase.co` |
+   | `SUPABASE_SERVICE_ROLE_KEY` | `eyJ...` |
+   | `JWT_SECRET` | (a random string — use a password generator) |
+
+5. Click **Deploy**. Vercel will build and deploy automatically.
+
+### Step 6: Embed in Squarespace
+
+Once deployed, your Vercel URL (e.g., `https://npa-students.vercel.app`) can be embedded in your Squarespace site:
+
+**Option A — Subdomain (recommended):**
+1. In Vercel, add a custom domain: `girls.nopoorafrica.org`
+2. In your DNS provider, add a CNAME record: `girls` → `cname.vercel-dns.com`
+3. Link to it from your main Squarespace navigation
+
+**Option B — Embed block:**
+1. In Squarespace, add a **Code Block** (or Embed Block) to a page
+2. Paste: `<iframe src="https://npa-students.vercel.app" width="100%" height="800" frameborder="0"></iframe>`
+
+## Local Development
+
+```bash
+# Install dependencies
+npm install
+
+# Create .env with your Supabase credentials
+cp .env.example .env
+
+# Run migrations against your Supabase DB
+npx prisma migrate deploy
+
+# Seed the database
 npm run db:seed
 
-# 6. Start the development server
+# Start dev server
 npm run dev
 ```
 
@@ -67,7 +137,7 @@ The app will be available at `http://localhost:3000`.
 - **Username:** `admin`
 - **Password:** `nopoorafrica2025`
 
-Change these in `.env` before seeding, or update the password in the admin panel after first login.
+Change these in `.env` before seeding.
 
 ## Project Structure
 
@@ -94,6 +164,7 @@ src/
 │   └── PhotoGallery.tsx                  # Lightbox photo gallery
 └── lib/
     ├── prisma.ts                         # Prisma client singleton
+    ├── supabase.ts                       # Supabase client for storage
     ├── auth.ts                           # JWT auth utilities
     ├── computed.ts                       # Age/grade computation
     └── images.ts                         # Image upload + Sharp processing
@@ -124,44 +195,17 @@ src/
 | `/api/admin/students/:id/snapshots` | POST | Add annual snapshot (multipart) |
 | `/api/admin/students/:id/gallery` | POST | Upload gallery photo (multipart) |
 
-## Database Schema
+## Environment Variables
 
-### students
-Core record for each girl — permanent data that rarely changes.
-
-### annual_snapshots
-One row per girl per year. Captures her story, photo, dream career, and academic info. The `extraData` JSON column provides unlimited flexibility for new fields.
-
-### media_gallery
-Additional photos beyond the profile and snapshot photos.
-
-### admin_users
-Staff login credentials.
-
-## Deployment
-
-### Squarespace Integration
-
-The public profile page is designed to be embedded in Squarespace via:
-- **HTML embed block** pointing to the hosted URL
-- **Subdomain** (e.g., `girls.nopoorafrica.org`) with CNAME to hosting provider
-
-### Recommended Production Setup
-
-1. **Database:** Switch to PostgreSQL (update `provider` in `prisma/schema.prisma` and `DATABASE_URL` in `.env`)
-2. **Hosting:** Vercel (frontend + API) or Railway/Render
-3. **Image Storage:** Migrate from local filesystem to Cloudflare R2 or AWS S3
-4. **CDN:** CloudFront or Cloudflare in front of image storage
-5. **Auth:** Set a strong `JWT_SECRET` in production environment
-
-### Environment Variables
-
-| Variable | Description |
-|----------|-------------|
-| `DATABASE_URL` | Database connection string |
-| `JWT_SECRET` | Secret for signing JWT tokens |
-| `ADMIN_SEED_USERNAME` | Initial admin username |
-| `ADMIN_SEED_PASSWORD` | Initial admin password |
+| Variable | Description | Where to find it |
+|----------|-------------|------------------|
+| `DATABASE_URL` | Pooled PostgreSQL connection string | Supabase > Settings > Database > Connection string (port 6543) |
+| `DIRECT_URL` | Direct PostgreSQL connection string | Supabase > Settings > Database > Connection string (port 5432) |
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL | Supabase > Settings > API > Project URL |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase service role key | Supabase > Settings > API > service_role key |
+| `JWT_SECRET` | Secret for signing admin JWT tokens | Generate a random string |
+| `ADMIN_SEED_USERNAME` | Initial admin username for seeding | Your choice |
+| `ADMIN_SEED_PASSWORD` | Initial admin password for seeding | Your choice |
 
 ## Design & Branding
 
