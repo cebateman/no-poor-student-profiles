@@ -70,12 +70,17 @@ export default function AdminSettingsPage() {
         return;
       }
 
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.error || "Failed to save");
+      const text = await res.text();
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch {
+        throw new Error("Server error: invalid response");
       }
 
-      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to save");
+      }
       setHeroBackgroundUrl(data.heroBackgroundUrl);
       setSelectedFile(null);
       setPreviewUrl(null);

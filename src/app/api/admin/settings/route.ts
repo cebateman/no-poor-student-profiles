@@ -26,53 +26,61 @@ export async function PUT(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const formData = await request.formData();
-  const file = formData.get("heroBackground") as File | null;
-  const removeBackground = formData.get("removeBackground") === "true";
+  try {
+    const formData = await request.formData();
+    const file = formData.get("heroBackground") as File | null;
+    const removeBackground = formData.get("removeBackground") === "true";
 
-  let heroBackgroundUrl: string | null | undefined;
+    let heroBackgroundUrl: string | null | undefined;
 
-  if (removeBackground) {
-    heroBackgroundUrl = null;
-  } else if (file && file.size > 0) {
-    const buffer = Buffer.from(await file.arrayBuffer());
+    if (removeBackground) {
+      heroBackgroundUrl = null;
+    } else if (file && file.size > 0) {
+      const buffer = Buffer.from(await file.arrayBuffer());
 
-    const processedBuffer = await sharp(buffer)
-      .resize(1920, 1080, { fit: "cover", position: "centre" })
-      .jpeg({ quality: 85 })
-      .toBuffer();
+      const processedBuffer = await sharp(buffer)
+        .resize(1920, 1080, { fit: "cover", position: "centre" })
+        .jpeg({ quality: 85 })
+        .toBuffer();
 
-    const id = uuid().slice(0, 8);
-    const path = `site/hero_${id}.jpg`;
+      const id = uuid().slice(0, 8);
+      const path = `site/hero_${id}.jpg`;
 
-    const supabase = getSupabase();
-    const { error } = await supabase.storage
-      .from(STORAGE_BUCKET)
-      .upload(path, processedBuffer, {
-        contentType: "image/jpeg",
-        upsert: true,
-      });
+      const supabase = getSupabase();
+      const { error } = await supabase.storage
+        .from(STORAGE_BUCKET)
+        .upload(path, processedBuffer, {
+          contentType: "image/jpeg",
+          upsert: true,
+        });
 
-    if (error) {
-      return NextResponse.json(
-        { error: `Failed to upload image: ${error.message}` },
-        { status: 500 }
-      );
+      if (error) {
+        return NextResponse.json(
+          { error: `Failed to upload image: ${error.message}` },
+          { status: 500 }
+        );
+      }
+
+      const { data } = supabase.storage.from(STORAGE_BUCKET).getPublicUrl(path);
+      heroBackgroundUrl = data.publicUrl;
     }
 
-    const { data } = supabase.storage.from(STORAGE_BUCKET).getPublicUrl(path);
-    heroBackgroundUrl = data.publicUrl;
+    if (heroBackgroundUrl === undefined) {
+      return NextResponse.json({ error: "No changes provided" }, { status: 400 });
+    }
+
+    const settings = await prisma.siteSettings.upsert({
+      where: { id: "singleton" },
+      update: { heroBackgroundUrl },
+      create: { id: "singleton", heroBackgroundUrl },
+    });
+
+    return NextResponse.json(settings);
+  } catch (err) {
+    console.error("Settings PUT error:", err);
+    return NextResponse.json(
+      { error: err instanceof Error ? err.message : "Internal server error" },
+      { status: 500 }
+    );
   }
-
-  if (heroBackgroundUrl === undefined) {
-    return NextResponse.json({ error: "No changes provided" }, { status: 400 });
-  }
-
-  const settings = await prisma.siteSettings.upsert({
-    where: { id: "singleton" },
-    update: { heroBackgroundUrl },
-    create: { id: "singleton", heroBackgroundUrl },
-  });
-
-  return NextResponse.json(settings);
 }
