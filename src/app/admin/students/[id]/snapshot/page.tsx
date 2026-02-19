@@ -3,18 +3,20 @@
 import { useState, FormEvent } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
+import { useLanguage } from "@/lib/LanguageContext";
 
 interface CustomField {
   key: string;
   value: string;
 }
 
-const LANGUAGE_OPTIONS = ["Portuguese", "English", "Local Language"];
+const LANGUAGE_KEYS = ["Portuguese", "English", "Local Language"] as const;
 
 export default function SnapshotFormPage() {
   const router = useRouter();
   const params = useParams();
   const studentId = params.id as string;
+  const { t } = useLanguage();
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -62,12 +64,18 @@ export default function SnapshotFormPage() {
     setCustomFields(customFields.filter((_, i) => i !== index));
   }
 
+  const languageDisplayNames: Record<string, () => string> = {
+    Portuguese: () => t("snapshotForm.portuguese"),
+    English: () => t("snapshotForm.english"),
+    "Local Language": () => t("snapshotForm.localLanguage"),
+  };
+
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setError("");
 
     if (!year || !gradeAtTime) {
-      setError("Year and grade at time are required.");
+      setError(t("snapshotForm.yearRequired"));
       return;
     }
 
@@ -126,13 +134,13 @@ export default function SnapshotFormPage() {
 
       if (!res.ok) {
         const data = await res.json();
-        throw new Error(data.error || "Failed to create snapshot.");
+        throw new Error(data.error || t("snapshotForm.failedCreate"));
       }
 
       router.push(`/admin/students/${studentId}`);
     } catch (err) {
       setError(
-        err instanceof Error ? err.message : "Failed to create snapshot."
+        err instanceof Error ? err.message : t("snapshotForm.failedCreate")
       );
       setLoading(false);
     }
@@ -150,7 +158,7 @@ export default function SnapshotFormPage() {
             fontSize: "14px",
           }}
         >
-          Dashboard
+          {t("nav.dashboard")}
         </Link>
         <span style={{ color: "#d1d5db", margin: "0 8px", fontSize: "14px" }}>
           /
@@ -163,13 +171,13 @@ export default function SnapshotFormPage() {
             fontSize: "14px",
           }}
         >
-          Student
+          {t("snapshotForm.breadcrumbStudent")}
         </Link>
         <span style={{ color: "#d1d5db", margin: "0 8px", fontSize: "14px" }}>
           /
         </span>
         <span style={{ color: "#271609", fontSize: "14px", fontWeight: 500 }}>
-          New Snapshot
+          {t("snapshotForm.breadcrumbNew")}
         </span>
       </div>
 
@@ -181,7 +189,7 @@ export default function SnapshotFormPage() {
           color: "#271609",
         }}
       >
-        Add Annual Snapshot
+        {t("snapshotForm.title")}
       </h1>
 
       {/* Error */}
@@ -222,7 +230,7 @@ export default function SnapshotFormPage() {
           >
             <div>
               <label style={labelStyle}>
-                Year <span style={{ color: "#dc2626" }}>*</span>
+                {t("snapshotForm.year")} <span style={{ color: "#dc2626" }}>*</span>
               </label>
               <input
                 type="number"
@@ -236,7 +244,7 @@ export default function SnapshotFormPage() {
             </div>
             <div>
               <label style={labelStyle}>
-                Grade at Time <span style={{ color: "#dc2626" }}>*</span>
+                {t("snapshot.gradeAtTime")} <span style={{ color: "#dc2626" }}>*</span>
               </label>
               <select
                 value={gradeAtTime}
@@ -245,7 +253,7 @@ export default function SnapshotFormPage() {
               >
                 {Array.from({ length: 12 }, (_, i) => i + 1).map((g) => (
                   <option key={g} value={g}>
-                    Grade {g}
+                    {`${t("form.grade")} ${g}`}
                   </option>
                 ))}
               </select>
@@ -254,7 +262,7 @@ export default function SnapshotFormPage() {
 
           {/* Photo Upload */}
           <div style={{ marginBottom: "24px" }}>
-            <label style={labelStyle}>Snapshot Photo</label>
+            <label style={labelStyle}>{t("snapshotForm.snapshotPhoto")}</label>
             <div
               style={{
                 display: "flex",
@@ -287,7 +295,7 @@ export default function SnapshotFormPage() {
                   textAlign: "center",
                 }}
               >
-                {photo ? photo.name : "Choose a photo..."}
+                {photo ? photo.name : t("snapshotForm.choosePhoto")}
                 <input
                   type="file"
                   accept="image/*"
@@ -314,31 +322,31 @@ export default function SnapshotFormPage() {
                 color: "#271609",
               }}
             >
-              Student Story
+              {t("snapshotForm.studentStory")}
             </h3>
 
             <div style={{ marginBottom: "16px" }}>
-              <label style={labelStyle}>Story Language</label>
+              <label style={labelStyle}>{t("snapshotForm.storyLanguage")}</label>
               <select
                 value={storyLanguage}
                 onChange={(e) => setStoryLanguage(e.target.value)}
                 style={{ ...inputStyle, maxWidth: "300px" }}
               >
-                {LANGUAGE_OPTIONS.map((lang) => (
+                {LANGUAGE_KEYS.map((lang) => (
                   <option key={lang} value={lang}>
-                    {lang}
+                    {languageDisplayNames[lang]()}
                   </option>
                 ))}
               </select>
             </div>
 
             <div style={{ marginBottom: "16px" }}>
-              <label style={labelStyle}>Story Text (Original Language)</label>
+              <label style={labelStyle}>{t("snapshotForm.storyTextLabel")}</label>
               <textarea
                 value={storyText}
                 onChange={(e) => setStoryText(e.target.value)}
                 rows={4}
-                placeholder="Student's story in their original language..."
+                placeholder={t("snapshotForm.storyTextPlaceholder")}
                 style={{
                   ...inputStyle,
                   resize: "vertical",
@@ -349,12 +357,12 @@ export default function SnapshotFormPage() {
             </div>
 
             <div>
-              <label style={labelStyle}>Story English Translation</label>
+              <label style={labelStyle}>{t("snapshotForm.translationLabel")}</label>
               <textarea
                 value={storyTranslation}
                 onChange={(e) => setStoryTranslation(e.target.value)}
                 rows={4}
-                placeholder="English translation of the story..."
+                placeholder={t("snapshotForm.translationPlaceholder")}
                 style={{
                   ...inputStyle,
                   resize: "vertical",
@@ -381,7 +389,7 @@ export default function SnapshotFormPage() {
                 color: "#271609",
               }}
             >
-              Interests &amp; Academics
+              {t("snapshotForm.interestsTitle")}
             </h3>
 
             <div
@@ -393,34 +401,34 @@ export default function SnapshotFormPage() {
               }}
             >
               <div>
-                <label style={labelStyle}>Dream Career</label>
+                <label style={labelStyle}>{t("snapshot.dreamCareer")}</label>
                 <input
                   type="text"
                   value={dreamCareer}
                   onChange={(e) => setDreamCareer(e.target.value)}
-                  placeholder="e.g. Doctor, Teacher, Engineer"
+                  placeholder={t("snapshotForm.dreamCareerPlaceholder")}
                   style={inputStyle}
                 />
               </div>
               <div>
-                <label style={labelStyle}>Favorite Subject</label>
+                <label style={labelStyle}>{t("snapshot.favoriteSubject")}</label>
                 <input
                   type="text"
                   value={favoriteSubject}
                   onChange={(e) => setFavoriteSubject(e.target.value)}
-                  placeholder="e.g. Mathematics, Science"
+                  placeholder={t("snapshotForm.favoriteSubjectPlaceholder")}
                   style={inputStyle}
                 />
               </div>
             </div>
 
             <div>
-              <label style={labelStyle}>Academic Notes (Internal)</label>
+              <label style={labelStyle}>{t("snapshot.academicNotes")}</label>
               <textarea
                 value={academicNotes}
                 onChange={(e) => setAcademicNotes(e.target.value)}
                 rows={3}
-                placeholder="Internal notes about academic performance, behavior, etc."
+                placeholder={t("snapshotForm.academicNotesPlaceholder")}
                 style={{
                   ...inputStyle,
                   resize: "vertical",
@@ -455,7 +463,7 @@ export default function SnapshotFormPage() {
                   color: "#271609",
                 }}
               >
-                Custom Fields
+                {t("snapshotForm.customFields")}
               </h3>
               <button
                 type="button"
@@ -470,7 +478,7 @@ export default function SnapshotFormPage() {
                   cursor: "pointer",
                 }}
               >
-                + Add Custom Field
+                {t("snapshotForm.addCustomField")}
               </button>
             </div>
 
@@ -483,8 +491,7 @@ export default function SnapshotFormPage() {
                   fontStyle: "italic",
                 }}
               >
-                No custom fields added. Use this to store extra data as
-                key/value pairs.
+                {t("snapshotForm.noCustomFields")}
               </p>
             ) : (
               <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
@@ -503,7 +510,7 @@ export default function SnapshotFormPage() {
                       onChange={(e) =>
                         updateCustomField(index, "key", e.target.value)
                       }
-                      placeholder="Key"
+                      placeholder={t("snapshotForm.key")}
                       style={{ ...inputStyle, flex: "1" }}
                     />
                     <input
@@ -512,7 +519,7 @@ export default function SnapshotFormPage() {
                       onChange={(e) =>
                         updateCustomField(index, "value", e.target.value)
                       }
-                      placeholder="Value"
+                      placeholder={t("snapshotForm.value")}
                       style={{ ...inputStyle, flex: "2" }}
                     />
                     <button
@@ -529,7 +536,7 @@ export default function SnapshotFormPage() {
                         whiteSpace: "nowrap",
                       }}
                     >
-                      Remove
+                      {t("snapshotForm.remove")}
                     </button>
                   </div>
                 ))}
@@ -560,7 +567,7 @@ export default function SnapshotFormPage() {
                 cursor: loading ? "not-allowed" : "pointer",
               }}
             >
-              {loading ? "Saving..." : "Save Snapshot"}
+              {loading ? t("form.saving") : t("snapshotForm.saveSnapshot")}
             </button>
             <button
               type="button"
@@ -576,7 +583,7 @@ export default function SnapshotFormPage() {
                 cursor: "pointer",
               }}
             >
-              Cancel
+              {t("form.cancel")}
             </button>
           </div>
         </form>

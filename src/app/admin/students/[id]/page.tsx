@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
+import { useLanguage } from "@/lib/LanguageContext";
 
 interface Snapshot {
   id: string;
@@ -59,6 +60,7 @@ export default function StudentDetailPage() {
   const router = useRouter();
   const params = useParams();
   const studentId = params.id as string;
+  const { t, getStatusLabel } = useLanguage();
 
   const [student, setStudent] = useState<Student | null>(null);
   const [loading, setLoading] = useState(true);
@@ -120,11 +122,11 @@ export default function StudentDetailPage() {
         setActiveSnapshotYear(data.snapshots[data.snapshots.length - 1].year);
       }
     } catch {
-      setError("Failed to load student data.");
+      setError(t("studentDetail.failedLoad"));
     } finally {
       setLoading(false);
     }
-  }, [studentId, authHeaders, router]);
+  }, [studentId, authHeaders, router, t]);
 
   useEffect(() => {
     fetchStudent();
@@ -168,10 +170,10 @@ export default function StudentDetailPage() {
 
       const data = await res.json();
       setStudent(data);
-      setSuccessMsg("Student saved successfully.");
+      setSuccessMsg(t("studentDetail.savedSuccess"));
       setTimeout(() => setSuccessMsg(""), 3000);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to save changes.");
+      setError(err instanceof Error ? err.message : t("studentDetail.failedSave"));
     } finally {
       setSaving(false);
     }
@@ -200,10 +202,10 @@ export default function StudentDetailPage() {
       setStudent((prev) =>
         prev ? { ...prev, profilePhotoUrl: data.profilePhotoUrl } : prev
       );
-      setSuccessMsg("Profile photo updated.");
+      setSuccessMsg(t("studentDetail.photoUpdated"));
       setTimeout(() => setSuccessMsg(""), 3000);
     } catch {
-      setError("Failed to upload photo.");
+      setError(t("studentDetail.failedPhoto"));
     } finally {
       setUploadingPhoto(false);
     }
@@ -231,10 +233,10 @@ export default function StudentDetailPage() {
 
       // Refresh student data to get updated gallery
       await fetchStudent();
-      setSuccessMsg("Gallery photo added.");
+      setSuccessMsg(t("studentDetail.galleryAdded"));
       setTimeout(() => setSuccessMsg(""), 3000);
     } catch {
-      setError("Failed to upload gallery photo.");
+      setError(t("studentDetail.failedGallery"));
     } finally {
       setUploadingGallery(false);
     }
@@ -243,7 +245,7 @@ export default function StudentDetailPage() {
   if (loading) {
     return (
       <div style={{ padding: "60px 0", textAlign: "center", color: "#6b7280" }}>
-        Loading student...
+        {t("studentDetail.loadingStudent")}
       </div>
     );
   }
@@ -251,7 +253,7 @@ export default function StudentDetailPage() {
   if (!student) {
     return (
       <div style={{ padding: "60px 0", textAlign: "center", color: "#6b7280" }}>
-        Student not found.
+        {t("studentDetail.notFound")}
       </div>
     );
   }
@@ -273,7 +275,7 @@ export default function StudentDetailPage() {
             fontSize: "14px",
           }}
         >
-          Dashboard
+          {t("nav.dashboard")}
         </Link>
         <span style={{ color: "#d1d5db", margin: "0 8px", fontSize: "14px" }}>/</span>
         <span style={{ color: "#271609", fontSize: "14px", fontWeight: 500 }}>
@@ -371,7 +373,7 @@ export default function StudentDetailPage() {
               fontSize: "14px",
               border: "2px solid #ffffff",
             }}
-            title="Upload profile photo"
+            title={t("studentDetail.uploadPhoto")}
           >
             {uploadingPhoto ? "..." : "\u270E"}
             <input
@@ -405,11 +407,11 @@ export default function StudentDetailPage() {
                 color: statusColor.text,
               }}
             >
-              {student.status.charAt(0).toUpperCase() + student.status.slice(1)}
+              {getStatusLabel(student.status)}
             </span>
             <span style={{ fontSize: "14px", color: "#6b7280" }}>
-              Age {student.age} &middot; Grade {student.currentGrade} &middot;{" "}
-              {student.yearsInProgram} yrs in program
+              {t("studentDetail.ageLabel")} {student.age} &middot; {t("studentDetail.gradeLabel")} {student.currentGrade} &middot;{" "}
+              {student.yearsInProgram} {t("studentDetail.yrsInProgram")}
             </span>
           </div>
         </div>
@@ -425,7 +427,7 @@ export default function StudentDetailPage() {
           marginBottom: "24px",
         }}
       >
-        <h2 style={sectionTitleStyle}>Student Information</h2>
+        <h2 style={sectionTitleStyle}>{t("studentDetail.info")}</h2>
         <div
           style={{
             display: "grid",
@@ -434,7 +436,7 @@ export default function StudentDetailPage() {
           }}
         >
           <div>
-            <label style={labelStyle}>Full Name</label>
+            <label style={labelStyle}>{t("form.fullName")}</label>
             <input
               type="text"
               value={fullName}
@@ -443,7 +445,7 @@ export default function StudentDetailPage() {
             />
           </div>
           <div>
-            <label style={labelStyle}>Preferred Name</label>
+            <label style={labelStyle}>{t("form.preferredName")}</label>
             <input
               type="text"
               value={preferredName}
@@ -452,7 +454,7 @@ export default function StudentDetailPage() {
             />
           </div>
           <div>
-            <label style={labelStyle}>Date of Birth</label>
+            <label style={labelStyle}>{t("form.dateOfBirth")}</label>
             <input
               type="date"
               value={dateOfBirth}
@@ -461,7 +463,7 @@ export default function StudentDetailPage() {
             />
           </div>
           <div>
-            <label style={labelStyle}>Home Community</label>
+            <label style={labelStyle}>{t("form.homeCommunity")}</label>
             <input
               type="text"
               value={homeCommunity}
@@ -470,7 +472,7 @@ export default function StudentDetailPage() {
             />
           </div>
           <div>
-            <label style={labelStyle}>Enrollment Year</label>
+            <label style={labelStyle}>{t("form.enrollmentYear")}</label>
             <input
               type="number"
               value={enrollmentYear}
@@ -479,7 +481,7 @@ export default function StudentDetailPage() {
             />
           </div>
           <div>
-            <label style={labelStyle}>Enrollment Grade</label>
+            <label style={labelStyle}>{t("form.enrollmentGrade")}</label>
             <select
               value={enrollmentGrade}
               onChange={(e) => setEnrollmentGrade(e.target.value)}
@@ -487,13 +489,13 @@ export default function StudentDetailPage() {
             >
               {Array.from({ length: 12 }, (_, i) => i + 1).map((g) => (
                 <option key={g} value={g}>
-                  Grade {g}
+                  {t("form.grade")} {g}
                 </option>
               ))}
             </select>
           </div>
           <div>
-            <label style={labelStyle}>Status</label>
+            <label style={labelStyle}>{t("form.status")}</label>
             <select
               value={status}
               onChange={(e) => setStatus(e.target.value)}
@@ -501,18 +503,18 @@ export default function StudentDetailPage() {
             >
               {STATUS_OPTIONS.map((s) => (
                 <option key={s} value={s}>
-                  {s.charAt(0).toUpperCase() + s.slice(1)}
+                  {getStatusLabel(s)}
                 </option>
               ))}
             </select>
           </div>
           <div>
-            <label style={labelStyle}>Graduation Year</label>
+            <label style={labelStyle}>{t("form.graduationYear")}</label>
             <input
               type="number"
               value={graduationYear}
               onChange={(e) => setGraduationYear(e.target.value)}
-              placeholder="Leave blank if not graduated"
+              placeholder={t("form.graduationYearPlaceholder")}
               style={inputStyle}
             />
           </div>
@@ -539,7 +541,7 @@ export default function StudentDetailPage() {
                   cursor: "pointer",
                 }}
               />
-              Visible on public website
+              {t("form.isPublic")}
             </label>
           </div>
         </div>
@@ -567,7 +569,7 @@ export default function StudentDetailPage() {
               cursor: saving ? "not-allowed" : "pointer",
             }}
           >
-            {saving ? "Saving..." : "Save Changes"}
+            {saving ? t("form.saving") : t("form.save")}
           </button>
         </div>
       </div>
@@ -590,7 +592,7 @@ export default function StudentDetailPage() {
             marginBottom: "20px",
           }}
         >
-          <h2 style={{ ...sectionTitleStyle, marginBottom: 0 }}>Annual Snapshots</h2>
+          <h2 style={{ ...sectionTitleStyle, marginBottom: 0 }}>{t("snapshot.title")}</h2>
           <button
             onClick={() =>
               router.push(`/admin/students/${studentId}/snapshot`)
@@ -606,13 +608,13 @@ export default function StudentDetailPage() {
               cursor: "pointer",
             }}
           >
-            + Add This Year&apos;s Update
+            {t("snapshot.addUpdate")}
           </button>
         </div>
 
         {!student.snapshots || student.snapshots.length === 0 ? (
           <p style={{ color: "#6b7280", fontSize: "14px", margin: 0 }}>
-            No snapshots yet. Add the first annual update for this student.
+            {t("snapshot.noSnapshots")}
           </p>
         ) : (
           <>
@@ -685,14 +687,14 @@ export default function StudentDetailPage() {
                     }}
                   >
                     <div>
-                      <span style={detailLabelStyle}>Grade at Time</span>
+                      <span style={detailLabelStyle}>{t("snapshot.gradeAtTime")}</span>
                       <span style={detailValueStyle}>
-                        Grade {activeSnapshot.gradeAtTime}
+                        {t("form.grade")} {activeSnapshot.gradeAtTime}
                       </span>
                     </div>
                     {activeSnapshot.dreamCareer && (
                       <div>
-                        <span style={detailLabelStyle}>Dream Career</span>
+                        <span style={detailLabelStyle}>{t("snapshot.dreamCareer")}</span>
                         <span style={detailValueStyle}>
                           {activeSnapshot.dreamCareer}
                         </span>
@@ -700,14 +702,14 @@ export default function StudentDetailPage() {
                     )}
                     {activeSnapshot.favoriteSubject && (
                       <div>
-                        <span style={detailLabelStyle}>Favorite Subject</span>
+                        <span style={detailLabelStyle}>{t("snapshot.favoriteSubject")}</span>
                         <span style={detailValueStyle}>
                           {activeSnapshot.favoriteSubject}
                         </span>
                       </div>
                     )}
                     <div>
-                      <span style={detailLabelStyle}>Story Language</span>
+                      <span style={detailLabelStyle}>{t("snapshot.storyLanguage")}</span>
                       <span style={detailValueStyle}>
                         {activeSnapshot.storyLanguage}
                       </span>
@@ -716,7 +718,7 @@ export default function StudentDetailPage() {
 
                   {activeSnapshot.storyText && (
                     <div style={{ marginBottom: "12px" }}>
-                      <span style={detailLabelStyle}>Story (Original)</span>
+                      <span style={detailLabelStyle}>{t("snapshot.storyOriginal")}</span>
                       <p
                         style={{
                           margin: "4px 0 0",
@@ -733,7 +735,7 @@ export default function StudentDetailPage() {
 
                   {activeSnapshot.storyTranslation && (
                     <div style={{ marginBottom: "12px" }}>
-                      <span style={detailLabelStyle}>Story (English)</span>
+                      <span style={detailLabelStyle}>{t("snapshot.storyEnglish")}</span>
                       <p
                         style={{
                           margin: "4px 0 0",
@@ -751,7 +753,7 @@ export default function StudentDetailPage() {
                   {activeSnapshot.academicNotes && (
                     <div style={{ marginBottom: "12px" }}>
                       <span style={detailLabelStyle}>
-                        Academic Notes (Internal)
+                        {t("snapshot.academicNotes")}
                       </span>
                       <p
                         style={{
@@ -771,7 +773,7 @@ export default function StudentDetailPage() {
                   {activeSnapshot.extraData &&
                     Object.keys(activeSnapshot.extraData).length > 0 && (
                       <div>
-                        <span style={detailLabelStyle}>Extra Data</span>
+                        <span style={detailLabelStyle}>{t("snapshot.extraData")}</span>
                         <div
                           style={{
                             marginTop: "4px",
@@ -823,7 +825,7 @@ export default function StudentDetailPage() {
             marginBottom: "20px",
           }}
         >
-          <h2 style={{ ...sectionTitleStyle, marginBottom: 0 }}>Photo Gallery</h2>
+          <h2 style={{ ...sectionTitleStyle, marginBottom: 0 }}>{t("gallery.title")}</h2>
           <label
             style={{
               padding: "8px 16px",
@@ -837,7 +839,7 @@ export default function StudentDetailPage() {
               display: "inline-block",
             }}
           >
-            {uploadingGallery ? "Uploading..." : "+ Add Photo"}
+            {uploadingGallery ? t("gallery.uploading") : t("gallery.addPhoto")}
             <input
               type="file"
               accept="image/*"
@@ -850,7 +852,7 @@ export default function StudentDetailPage() {
 
         {!student.gallery || student.gallery.length === 0 ? (
           <p style={{ color: "#6b7280", fontSize: "14px", margin: 0 }}>
-            No gallery photos yet.
+            {t("gallery.noPhotos")}
           </p>
         ) : (
           <div
@@ -906,7 +908,7 @@ export default function StudentDetailPage() {
                           fontWeight: 500,
                         }}
                       >
-                        Featured
+                        {t("gallery.featured")}
                       </span>
                     )}
                   </div>

@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useMemo, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { useLanguage } from "@/lib/LanguageContext";
 
 interface Student {
   id: string;
@@ -29,6 +30,7 @@ const STATUS_COLORS: Record<string, { bg: string; text: string }> = {
 
 export default function AdminDashboardPage() {
   const router = useRouter();
+  const { t, getStatusLabel } = useLanguage();
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -103,10 +105,10 @@ export default function AdminDashboardPage() {
               color: "#271609",
             }}
           >
-            Students
+            {t("dashboard.title")}
           </h1>
           <p style={{ margin: "4px 0 0", fontSize: "14px", color: "#6b7280" }}>
-            {filteredStudents.length} student{filteredStudents.length !== 1 ? "s" : ""} found
+            {filteredStudents.length} {filteredStudents.length !== 1 ? t("dashboard.studentCountPlural") : t("dashboard.studentCount")} {t("dashboard.found")}
           </p>
         </div>
         <button
@@ -122,7 +124,7 @@ export default function AdminDashboardPage() {
             cursor: "pointer",
           }}
         >
-          + Add New Student
+          {t("dashboard.addNew")}
         </button>
       </div>
 
@@ -138,7 +140,7 @@ export default function AdminDashboardPage() {
         {/* Search */}
         <input
           type="text"
-          placeholder="Search by name..."
+          placeholder={t("dashboard.searchPlaceholder")}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           style={{
@@ -171,7 +173,7 @@ export default function AdminDashboardPage() {
         >
           {STATUS_OPTIONS.map((s) => (
             <option key={s} value={s}>
-              {s === "all" ? "All Statuses" : s.charAt(0).toUpperCase() + s.slice(1)}
+              {s === "all" ? t("dashboard.allStatuses") : getStatusLabel(s)}
             </option>
           ))}
         </select>
@@ -204,7 +206,7 @@ export default function AdminDashboardPage() {
             fontSize: "14px",
           }}
         >
-          Loading students...
+          {t("dashboard.loadingStudents")}
         </div>
       ) : filteredStudents.length === 0 ? (
         <div
@@ -215,7 +217,7 @@ export default function AdminDashboardPage() {
             fontSize: "14px",
           }}
         >
-          No students found.
+          {t("dashboard.noStudents")}
         </div>
       ) : (
         <div
@@ -240,12 +242,12 @@ export default function AdminDashboardPage() {
                   borderBottom: "1px solid #e5e7eb",
                 }}
               >
-                <th style={thStyle}>Photo</th>
-                <th style={{ ...thStyle, textAlign: "left" }}>Name</th>
-                <th style={thStyle}>Age</th>
-                <th style={thStyle}>Grade</th>
-                <th style={thStyle}>Status</th>
-                <th style={{ ...thStyle, textAlign: "left" }}>Community</th>
+                <th style={thStyle}>{t("dashboard.photo")}</th>
+                <th style={{ ...thStyle, textAlign: "left" }}>{t("dashboard.name")}</th>
+                <th style={thStyle}>{t("dashboard.age")}</th>
+                <th style={thStyle}>{t("dashboard.grade")}</th>
+                <th style={thStyle}>{t("dashboard.status")}</th>
+                <th style={{ ...thStyle, textAlign: "left" }}>{t("dashboard.community")}</th>
               </tr>
             </thead>
             <tbody>
@@ -326,7 +328,7 @@ export default function AdminDashboardPage() {
                           color: statusColor.text,
                         }}
                       >
-                        {student.status.charAt(0).toUpperCase() + student.status.slice(1)}
+                        {getStatusLabel(student.status)}
                       </span>
                     </td>
                     <td style={tdStyle}>{student.homeCommunity}</td>

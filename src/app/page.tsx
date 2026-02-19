@@ -11,6 +11,7 @@ export default function HomePage() {
   const [error, setError] = useState<string | null>(null);
   const [activeFilter, setActiveFilter] = useState("active");
   const [searchQuery, setSearchQuery] = useState("");
+  const [heroBackgroundUrl, setHeroBackgroundUrl] = useState<string | null>(null);
 
   const fetchStudents = useCallback(async (status: string) => {
     setLoading(true);
@@ -50,6 +51,13 @@ export default function HomePage() {
     fetchStudents(activeFilter);
   }, [activeFilter, fetchStudents]);
 
+  useEffect(() => {
+    fetch("/api/settings")
+      .then((res) => res.json())
+      .then((data) => setHeroBackgroundUrl(data.heroBackgroundUrl || null))
+      .catch(() => {});
+  }, []);
+
   const handleFilterChange = (filter: string) => {
     setActiveFilter(filter);
     setSearchQuery("");
@@ -66,18 +74,28 @@ export default function HomePage() {
     <div className="min-h-screen bg-npa-cream">
       {/* Hero Section */}
       <header className="relative bg-npa-green-dark overflow-hidden">
-        {/* Decorative background pattern */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-npa-green-lighter rounded-full -translate-y-1/2 translate-x-1/3" />
-          <div className="absolute bottom-0 left-0 w-72 h-72 bg-npa-accent rounded-full translate-y-1/3 -translate-x-1/4" />
-        </div>
+        {/* Background: image or decorative pattern */}
+        {heroBackgroundUrl ? (
+          <>
+            <div
+              className="absolute inset-0 bg-cover bg-center"
+              style={{ backgroundImage: `url(${heroBackgroundUrl})` }}
+            />
+            <div className="absolute inset-0 bg-npa-green-dark/60" />
+          </>
+        ) : (
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute top-0 right-0 w-96 h-96 bg-npa-green-lighter rounded-full -translate-y-1/2 translate-x-1/3" />
+            <div className="absolute bottom-0 left-0 w-72 h-72 bg-npa-accent rounded-full translate-y-1/3 -translate-x-1/4" />
+          </div>
+        )}
 
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 text-center">
           <p className="text-npa-green-lighter text-sm font-medium tracking-widest uppercase mb-4">
             No Poor Africa
           </p>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-tight mb-6 font-serif">
-            Meet our girls.
+            Meet the girls.
             <br />
             <span className="text-npa-green-lighter">
               Every girl has a story, a dream,

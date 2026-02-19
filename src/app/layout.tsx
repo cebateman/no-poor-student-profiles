@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "No Poor Africa | Our Girls",
+  title: "No Poor Africa | Meet the Girls",
   description:
     "Meet the girls in the No Poor Africa program. Every girl has a story, a dream, and a future worth investing in.",
   robots: {
