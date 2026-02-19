@@ -61,7 +61,7 @@ export default function JourneyTimeline({
                   ) : null}
 
                   {snapshot.dreamCareer && (
-                    <p className="mt-2 text-sm text-npa-accent font-medium">
+                    <p className="mt-2 text-sm text-npa-green font-medium">
                       Dream: {snapshot.dreamCareer}
                     </p>
                   )}

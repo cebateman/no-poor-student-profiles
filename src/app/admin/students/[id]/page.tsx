@@ -49,7 +49,7 @@ interface Student {
 const STATUS_OPTIONS = ["active", "graduated", "alumni", "withdrawn"];
 
 const STATUS_COLORS: Record<string, { bg: string; text: string }> = {
-  active: { bg: "#dcfce7", text: "#166534" },
+  active: { bg: "#E0EDEA", text: "#335D63" },
   graduated: { bg: "#dbeafe", text: "#1e40af" },
   alumni: { bg: "#f3e8ff", text: "#7c3aed" },
   withdrawn: { bg: "#f3f4f6", text: "#6b7280" },
@@ -276,7 +276,7 @@ export default function StudentDetailPage() {
           Dashboard
         </Link>
         <span style={{ color: "#d1d5db", margin: "0 8px", fontSize: "14px" }}>/</span>
-        <span style={{ color: "#111827", fontSize: "14px", fontWeight: 500 }}>
+        <span style={{ color: "#271609", fontSize: "14px", fontWeight: 500 }}>
           {student.preferredName}
         </span>
       </div>
@@ -303,9 +303,9 @@ export default function StudentDetailPage() {
             padding: "12px 16px",
             marginBottom: "16px",
             borderRadius: "8px",
-            backgroundColor: "#f0fdf4",
-            border: "1px solid #bbf7d0",
-            color: "#166534",
+            backgroundColor: "#E8F0EC",
+            border: "1px solid #B0CFC0",
+            color: "#335D63",
             fontSize: "14px",
           }}
         >
@@ -362,7 +362,7 @@ export default function StudentDetailPage() {
               width: "28px",
               height: "28px",
               borderRadius: "50%",
-              backgroundColor: "#166534",
+              backgroundColor: "#335D63",
               color: "#ffffff",
               display: "flex",
               alignItems: "center",
@@ -384,7 +384,7 @@ export default function StudentDetailPage() {
           </label>
         </div>
         <div>
-          <h1 style={{ margin: 0, fontSize: "24px", fontWeight: 700, color: "#111827" }}>
+          <h1 style={{ margin: 0, fontSize: "24px", fontWeight: 700, color: "#271609" }}>
             {student.fullName}
           </h1>
           <div
@@ -535,7 +535,7 @@ export default function StudentDetailPage() {
                 style={{
                   width: "18px",
                   height: "18px",
-                  accentColor: "#166534",
+                  accentColor: "#335D63",
                   cursor: "pointer",
                 }}
               />
@@ -560,7 +560,7 @@ export default function StudentDetailPage() {
               padding: "10px 24px",
               border: "none",
               borderRadius: "8px",
-              backgroundColor: saving ? "#86efac" : "#166534",
+              backgroundColor: saving ? "#8FBFC4" : "#335D63",
               color: "#ffffff",
               fontSize: "14px",
               fontWeight: 600,
@@ -599,7 +599,7 @@ export default function StudentDetailPage() {
               padding: "8px 16px",
               border: "none",
               borderRadius: "8px",
-              backgroundColor: "#166534",
+              backgroundColor: "#335D63",
               color: "#ffffff",
               fontSize: "13px",
               fontWeight: 600,
@@ -635,11 +635,11 @@ export default function StudentDetailPage() {
                     border: "none",
                     borderBottom:
                       activeSnapshotYear === snap.year
-                        ? "2px solid #166534"
+                        ? "2px solid #335D63"
                         : "2px solid transparent",
                     backgroundColor: "transparent",
                     color:
-                      activeSnapshotYear === snap.year ? "#166534" : "#6b7280",
+                      activeSnapshotYear === snap.year ? "#335D63" : "#6b7280",
                     fontWeight: activeSnapshotYear === snap.year ? 600 : 400,
                     fontSize: "14px",
                     cursor: "pointer",
@@ -829,7 +829,7 @@ export default function StudentDetailPage() {
               padding: "8px 16px",
               border: "none",
               borderRadius: "8px",
-              backgroundColor: uploadingGallery ? "#86efac" : "#166534",
+              backgroundColor: uploadingGallery ? "#8FBFC4" : "#335D63",
               color: "#ffffff",
               fontSize: "13px",
               fontWeight: 600,
@@ -935,7 +935,7 @@ const sectionTitleStyle: React.CSSProperties = {
   margin: "0 0 20px",
   fontSize: "17px",
   fontWeight: 600,
-  color: "#111827",
+  color: "#271609",
 };
 
 const labelStyle: React.CSSProperties = {
@@ -970,5 +970,5 @@ const detailLabelStyle: React.CSSProperties = {
 const detailValueStyle: React.CSSProperties = {
   display: "block",
   fontSize: "14px",
-  color: "#111827",
+  color: "#271609",
 };

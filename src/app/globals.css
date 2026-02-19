@@ -3,15 +3,15 @@
 @tailwind utilities;
 
 :root {
-  --background: #FAFAF8;
-  --foreground: #1a1a1a;
-  --npa-green: #2D6A4F;
-  --npa-green-light: #40916C;
-  --npa-green-lighter: #52B788;
-  --npa-green-dark: #1B4332;
-  --npa-cream: #FAFAF8;
-  --npa-warm-white: #FFF8F0;
-  --npa-accent: #D4A373;
+  --background: #CEDBD5;
+  --foreground: #271609;
+  --npa-green: #335D63;
+  --npa-green-light: #4A7A80;
+  --npa-green-lighter: #6A9A9F;
+  --npa-green-dark: #1E3A3F;
+  --npa-cream: #CEDBD5;
+  --npa-warm-white: #E3EBE6;
+  --npa-accent: #F1CB4B;
 }
 
 body {
@@ -32,7 +32,7 @@ body {
   }
 
   .btn-accent {
-    @apply bg-npa-accent text-white px-6 py-2.5 rounded-lg font-medium
+    @apply bg-npa-accent text-npa-dark px-6 py-2.5 rounded-lg font-medium
            hover:opacity-90 transition-opacity duration-200;
   }
 

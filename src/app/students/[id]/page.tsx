@@ -175,7 +175,7 @@ export default function StudentProfilePage() {
                 </p>
               )}
               {student.status === "graduated" && (
-                <span className="inline-block mt-2 bg-npa-accent text-white text-xs font-semibold px-3 py-1 rounded-full">
+                <span className="inline-block mt-2 bg-npa-accent text-npa-dark text-xs font-semibold px-3 py-1 rounded-full">
                   Graduate {student.graduationYear && `- Class of ${student.graduationYear}`}
                 </span>
               )}
@@ -370,7 +370,7 @@ export default function StudentProfilePage() {
                 </svg>
               </div>
               <div>
-                <p className="text-sm font-medium text-npa-accent uppercase tracking-wide mb-1">
+                <p className="text-sm font-medium text-npa-green uppercase tracking-wide mb-1">
                   Her Dream
                 </p>
                 <p className="text-xl font-semibold text-npa-green-dark font-serif">
@@ -415,7 +415,7 @@ export default function StudentProfilePage() {
                 href="https://nopoorafrica.org/donate/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-npa-accent text-white px-8 py-3.5 rounded-full font-semibold text-lg hover:opacity-90 transition-opacity duration-200 shadow-lg"
+                className="inline-flex items-center gap-2 bg-npa-accent text-npa-dark px-8 py-3.5 rounded-full font-semibold text-lg hover:opacity-90 transition-opacity duration-200 shadow-lg"
               >
                 <svg
                   className="w-5 h-5"

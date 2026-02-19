@@ -88,7 +88,7 @@ export default function NewStudentPage() {
           Dashboard
         </Link>
         <span style={{ color: "#d1d5db", margin: "0 8px", fontSize: "14px" }}>/</span>
-        <span style={{ color: "#111827", fontSize: "14px", fontWeight: 500 }}>
+        <span style={{ color: "#271609", fontSize: "14px", fontWeight: 500 }}>
           New Student
         </span>
       </div>
@@ -98,7 +98,7 @@ export default function NewStudentPage() {
           margin: "0 0 24px",
           fontSize: "24px",
           fontWeight: 700,
-          color: "#111827",
+          color: "#271609",
         }}
       >
         Add New Student
@@ -267,7 +267,7 @@ export default function NewStudentPage() {
                   style={{
                     width: "18px",
                     height: "18px",
-                    accentColor: "#166534",
+                    accentColor: "#335D63",
                     cursor: "pointer",
                   }}
                 />
@@ -293,7 +293,7 @@ export default function NewStudentPage() {
                 padding: "10px 24px",
                 border: "none",
                 borderRadius: "8px",
-                backgroundColor: loading ? "#86efac" : "#166534",
+                backgroundColor: loading ? "#8FBFC4" : "#335D63",
                 color: "#ffffff",
                 fontSize: "14px",
                 fontWeight: 600,
