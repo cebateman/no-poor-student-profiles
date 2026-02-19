@@ -1,0 +1,67 @@
+"use client";
+
+import { useState } from "react";
+import { GalleryData } from "@/lib/computed";
+
+export default function PhotoGallery({ photos }: { photos: GalleryData[] }) {
+  const [selectedPhoto, setSelectedPhoto] = useState<GalleryData | null>(null);
+
+  if (!photos || photos.length === 0) return null;
+
+  return (
+    <>
+      <div>
+        <h2 className="text-2xl font-semibold text-npa-green-dark mb-4">
+          Photo Gallery
+        </h2>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+          {photos.map((photo) => (
+            <button
+              key={photo.id}
+              onClick={() => setSelectedPhoto(photo)}
+              className="relative aspect-square overflow-hidden rounded-lg group"
+            >
+              <img
+                src={photo.photoUrl}
+                alt={photo.caption || "Gallery photo"}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+              {photo.caption && (
+                <div className="absolute bottom-0 left-0 right-0 bg-black/50 text-white text-xs p-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                  {photo.caption}
+                </div>
+              )}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Lightbox */}
+      {selectedPhoto && (
+        <div
+          className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
+          onClick={() => setSelectedPhoto(null)}
+        >
+          <div className="relative max-w-3xl max-h-[90vh]">
+            <button
+              onClick={() => setSelectedPhoto(null)}
+              className="absolute -top-10 right-0 text-white text-xl hover:opacity-80"
+            >
+              Close
+            </button>
+            <img
+              src={selectedPhoto.photoUrl}
+              alt={selectedPhoto.caption || "Gallery photo"}
+              className="max-w-full max-h-[80vh] object-contain rounded-lg"
+            />
+            {selectedPhoto.caption && (
+              <p className="text-white text-center mt-3">
+                {selectedPhoto.caption} ({selectedPhoto.year})
+              </p>
+            )}
+          </div>
+        </div>
+      )}
+    </>
+  );
+}

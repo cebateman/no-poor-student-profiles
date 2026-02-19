@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Student {
+  id              String   @id @default(uuid())
+  fullName        String
+  preferredName   String
+  dateOfBirth     DateTime
+  enrollmentYear  Int
+  enrollmentGrade Int
+  homeCommunity   String
+  profilePhotoUrl String?
+  status          String   @default("active") // active, graduated, withdrawn, alumni
+  graduationYear  Int?
+  isPublic        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  snapshots AnnualSnapshot[]
+  gallery   MediaGallery[]
+
+  @@map("students")
+}
+
+model AnnualSnapshot {
+  id               String   @id @default(uuid())
+  studentId        String
+  year             Int
+  gradeAtTime      Int
+  photoUrl         String?
+  storyText        String?
+  storyLanguage    String   @default("Portuguese")
+  storyTranslation String?
+  dreamCareer      String?
+  favoriteSubject  String?
+  academicNotes    String?
+  extraData        String?  // JSON string for flexible key-value data
+  createdAt        DateTime @default(now())
+
+  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId, year])
+  @@map("annual_snapshots")
+}
+
+model MediaGallery {
+  id         String  @id @default(uuid())
+  studentId  String
+  year       Int
+  photoUrl   String
+  caption    String?
+  isFeatured Boolean @default(false)
+
+  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@map("media_gallery")
+}
+
+model AdminUser {
+  id        String   @id @default(uuid())
+  username  String   @unique
+  password  String
+  name      String
+  createdAt DateTime @default(now())
+
+  @@map("admin_users")
+}
