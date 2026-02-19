@@ -21,7 +21,7 @@ interface Student {
 const STATUS_OPTIONS = ["all", "active", "graduated", "alumni", "withdrawn"] as const;
 
 const STATUS_COLORS: Record<string, { bg: string; text: string }> = {
-  active: { bg: "#dcfce7", text: "#166534" },
+  active: { bg: "#E0EDEA", text: "#335D63" },
   graduated: { bg: "#dbeafe", text: "#1e40af" },
   alumni: { bg: "#f3e8ff", text: "#7c3aed" },
   withdrawn: { bg: "#f3f4f6", text: "#6b7280" },
@@ -100,7 +100,7 @@ export default function AdminDashboardPage() {
               margin: 0,
               fontSize: "24px",
               fontWeight: 700,
-              color: "#111827",
+              color: "#271609",
             }}
           >
             Students
@@ -115,7 +115,7 @@ export default function AdminDashboardPage() {
             padding: "10px 20px",
             border: "none",
             borderRadius: "8px",
-            backgroundColor: "#166534",
+            backgroundColor: "#335D63",
             color: "#ffffff",
             fontSize: "14px",
             fontWeight: 600,
@@ -299,7 +299,7 @@ export default function AdminDashboardPage() {
                       )}
                     </td>
                     <td style={tdStyle}>
-                      <div style={{ fontWeight: 500, color: "#111827" }}>
+                      <div style={{ fontWeight: 500, color: "#271609" }}>
                         {student.fullName}
                       </div>
                       {student.preferredName !== student.fullName && (

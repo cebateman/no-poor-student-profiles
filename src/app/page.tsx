@@ -94,7 +94,7 @@ export default function HomePage() {
             href="https://nopoorafrica.org/donate/"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-npa-accent text-white px-8 py-3.5 rounded-full font-semibold text-lg hover:opacity-90 transition-opacity duration-200 shadow-lg"
+            className="inline-flex items-center gap-2 bg-npa-accent text-npa-dark px-8 py-3.5 rounded-full font-semibold text-lg hover:opacity-90 transition-opacity duration-200 shadow-lg"
           >
             <svg
               className="w-5 h-5"

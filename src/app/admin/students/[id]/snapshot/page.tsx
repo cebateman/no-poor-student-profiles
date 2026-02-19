@@ -168,7 +168,7 @@ export default function SnapshotFormPage() {
         <span style={{ color: "#d1d5db", margin: "0 8px", fontSize: "14px" }}>
           /
         </span>
-        <span style={{ color: "#111827", fontSize: "14px", fontWeight: 500 }}>
+        <span style={{ color: "#271609", fontSize: "14px", fontWeight: 500 }}>
           New Snapshot
         </span>
       </div>
@@ -178,7 +178,7 @@ export default function SnapshotFormPage() {
           margin: "0 0 24px",
           fontSize: "24px",
           fontWeight: 700,
-          color: "#111827",
+          color: "#271609",
         }}
       >
         Add Annual Snapshot
@@ -311,7 +311,7 @@ export default function SnapshotFormPage() {
                 margin: "0 0 16px",
                 fontSize: "15px",
                 fontWeight: 600,
-                color: "#111827",
+                color: "#271609",
               }}
             >
               Student Story
@@ -378,7 +378,7 @@ export default function SnapshotFormPage() {
                 margin: "0 0 16px",
                 fontSize: "15px",
                 fontWeight: 600,
-                color: "#111827",
+                color: "#271609",
               }}
             >
               Interests &amp; Academics
@@ -452,7 +452,7 @@ export default function SnapshotFormPage() {
                   margin: 0,
                   fontSize: "15px",
                   fontWeight: 600,
-                  color: "#111827",
+                  color: "#271609",
                 }}
               >
                 Custom Fields
@@ -553,7 +553,7 @@ export default function SnapshotFormPage() {
                 padding: "10px 24px",
                 border: "none",
                 borderRadius: "8px",
-                backgroundColor: loading ? "#86efac" : "#166534",
+                backgroundColor: loading ? "#8FBFC4" : "#335D63",
                 color: "#ffffff",
                 fontSize: "14px",
                 fontWeight: 600,

@@ -47,7 +47,7 @@ export default function AdminLayout({
           alignItems: "center",
           justifyContent: "center",
           height: "100vh",
-          background: "#f3f4f6",
+          background: "#CEDBD5",
           fontFamily:
             '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
         }}
@@ -111,7 +111,7 @@ export default function AdminLayout({
                 margin: 0,
                 fontSize: "20px",
                 fontWeight: 700,
-                color: "#166534",
+                color: "#335D63",
                 letterSpacing: "-0.5px",
               }}
             >
@@ -151,8 +151,8 @@ export default function AdminLayout({
                   textDecoration: "none",
                   fontSize: "14px",
                   fontWeight: isActive ? 600 : 400,
-                  color: isActive ? "#166534" : "#374151",
-                  backgroundColor: isActive ? "#f0fdf4" : "transparent",
+                  color: isActive ? "#335D63" : "#374151",
+                  backgroundColor: isActive ? "#E8F0EC" : "transparent",
                   transition: "background-color 0.15s",
                 }}
               >
@@ -202,7 +202,7 @@ export default function AdminLayout({
         style={{
           flex: 1,
           marginLeft: "240px",
-          backgroundColor: "#f3f4f6",
+          backgroundColor: "#CEDBD5",
           minHeight: "100vh",
         }}
       >

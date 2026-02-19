@@ -45,7 +45,7 @@ export default function AdminLoginPage() {
         alignItems: "center",
         justifyContent: "center",
         minHeight: "100vh",
-        backgroundColor: "#f3f4f6",
+        backgroundColor: "#CEDBD5",
         fontFamily:
           '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
       }}
@@ -76,7 +76,7 @@ export default function AdminLoginPage() {
                 width: "56px",
                 height: "56px",
                 borderRadius: "12px",
-                backgroundColor: "#166534",
+                backgroundColor: "#335D63",
                 color: "#ffffff",
                 fontSize: "24px",
                 fontWeight: 700,
@@ -90,7 +90,7 @@ export default function AdminLoginPage() {
                 margin: "0 0 4px",
                 fontSize: "22px",
                 fontWeight: 700,
-                color: "#111827",
+                color: "#271609",
               }}
             >
               Admin Login
@@ -155,7 +155,7 @@ export default function AdminLoginPage() {
                   boxSizing: "border-box",
                   transition: "border-color 0.15s",
                 }}
-                onFocus={(e) => (e.target.style.borderColor = "#166534")}
+                onFocus={(e) => (e.target.style.borderColor = "#335D63")}
                 onBlur={(e) => (e.target.style.borderColor = "#d1d5db")}
               />
             </div>
@@ -190,7 +190,7 @@ export default function AdminLoginPage() {
                   boxSizing: "border-box",
                   transition: "border-color 0.15s",
                 }}
-                onFocus={(e) => (e.target.style.borderColor = "#166534")}
+                onFocus={(e) => (e.target.style.borderColor = "#335D63")}
                 onBlur={(e) => (e.target.style.borderColor = "#d1d5db")}
               />
             </div>
@@ -203,7 +203,7 @@ export default function AdminLoginPage() {
                 padding: "12px",
                 border: "none",
                 borderRadius: "8px",
-                backgroundColor: loading ? "#86efac" : "#166534",
+                backgroundColor: loading ? "#8FBFC4" : "#335D63",
                 color: "#ffffff",
                 fontSize: "14px",
                 fontWeight: 600,
