@@ -15,6 +15,7 @@ export default function StudentProfilePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showOriginalLanguage, setShowOriginalLanguage] = useState(false);
+  const [heroBackgroundUrl, setHeroBackgroundUrl] = useState<string | null>(null);
 
   useEffect(() => {
     if (!id) return;
@@ -41,6 +42,13 @@ export default function StudentProfilePage() {
 
     fetchStudent();
   }, [id]);
+
+  useEffect(() => {
+    fetch("/api/settings")
+      .then((res) => res.json())
+      .then((data) => setHeroBackgroundUrl(data.heroBackgroundUrl || null))
+      .catch(() => {});
+  }, []);
 
   // Get the latest snapshot for the "Her Story" section
   const latestSnapshot: SnapshotData | undefined = student?.snapshots
@@ -116,7 +124,10 @@ export default function StudentProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-npa-cream">
+    <div
+      className="min-h-screen bg-npa-cream bg-cover bg-center bg-fixed"
+      style={heroBackgroundUrl ? { backgroundImage: `url(${heroBackgroundUrl})` } : undefined}
+    >
       {/* Hero Section with Photo */}
       <header className="relative bg-npa-green-dark">
         {/* Back Link */}
@@ -185,7 +196,7 @@ export default function StudentProfilePage() {
       </header>
 
       {/* Quick Stats Bar */}
-      <div className="bg-white border-b border-gray-100 shadow-sm">
+      <div className="bg-white/90 backdrop-blur-sm border-b border-gray-100 shadow-sm">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 sm:grid-cols-4 divide-x divide-gray-100">
             {/* Age */}
@@ -302,7 +313,7 @@ export default function StudentProfilePage() {
       </div>
 
       {/* Main Content */}
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
+      <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16 bg-npa-cream/90 backdrop-blur-sm">
         {/* Her Story Section */}
         {storyText && (
           <section>
@@ -438,7 +449,7 @@ export default function StudentProfilePage() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-npa-green-dark text-white">
+      <footer className="bg-npa-green-dark/95 text-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div>

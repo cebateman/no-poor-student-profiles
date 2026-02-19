@@ -71,19 +71,14 @@ export default function HomePage() {
     : students;
 
   return (
-    <div className="min-h-screen bg-npa-cream">
+    <div
+      className="min-h-screen bg-npa-cream bg-cover bg-center bg-fixed"
+      style={heroBackgroundUrl ? { backgroundImage: `url(${heroBackgroundUrl})` } : undefined}
+    >
       {/* Hero Section */}
-      <header className="relative bg-npa-green-dark overflow-hidden">
-        {/* Background: image or decorative pattern */}
-        {heroBackgroundUrl ? (
-          <>
-            <div
-              className="absolute inset-0 bg-cover bg-center"
-              style={{ backgroundImage: `url(${heroBackgroundUrl})` }}
-            />
-            <div className="absolute inset-0 bg-npa-green-dark/60" />
-          </>
-        ) : (
+      <header className="relative bg-npa-green-dark/80 overflow-hidden">
+        {/* Decorative pattern fallback when no background image */}
+        {!heroBackgroundUrl && (
           <div className="absolute inset-0 opacity-10">
             <div className="absolute top-0 right-0 w-96 h-96 bg-npa-green-lighter rounded-full -translate-y-1/2 translate-x-1/3" />
             <div className="absolute bottom-0 left-0 w-72 h-72 bg-npa-accent rounded-full translate-y-1/3 -translate-x-1/4" />
@@ -133,7 +128,7 @@ export default function HomePage() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 bg-npa-cream/90 backdrop-blur-sm">
         {/* Filter Bar */}
         <FilterBar
           activeFilter={activeFilter}
@@ -228,7 +223,7 @@ export default function HomePage() {
       </main>
 
       {/* Bottom CTA */}
-      <section className="bg-npa-warmWhite border-t border-npa-accent/20">
+      <section className="bg-npa-warmWhite/90 backdrop-blur-sm border-t border-npa-accent/20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
           <h2 className="text-2xl sm:text-3xl font-bold text-npa-green-dark mb-4 font-serif">
             Change a girl&apos;s story
@@ -263,7 +258,7 @@ export default function HomePage() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-npa-green-dark text-white">
+      <footer className="bg-npa-green-dark/95 text-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div>
