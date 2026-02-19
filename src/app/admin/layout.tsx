@@ -3,16 +3,14 @@
 import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
+import { LanguageProvider, useLanguage } from "@/lib/LanguageContext";
 
-export default function AdminLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+function AdminLayoutInner({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const [authenticated, setAuthenticated] = useState(false);
   const [checking, setChecking] = useState(true);
+  const { locale, setLocale, t } = useLanguage();
 
   useEffect(() => {
     const token = localStorage.getItem("npa_token");
@@ -52,7 +50,7 @@ export default function AdminLayout({
             '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
         }}
       >
-        <p style={{ color: "#6b7280", fontSize: "16px" }}>Loading...</p>
+        <p style={{ color: "#6b7280", fontSize: "16px" }}>{t("nav.loading")}</p>
       </div>
     );
   }
@@ -67,9 +65,10 @@ export default function AdminLayout({
   }
 
   const navItems = [
-    { href: "/admin", label: "Dashboard", icon: "\u2302" },
-    { href: "/admin/students/new", label: "Add Student", icon: "+" },
-    { href: "/admin/settings", label: "Site Settings", icon: "\u2699" },
+    { href: "/admin", label: t("nav.dashboard"), icon: "\u2302" },
+    { href: "/admin/students/new", label: t("nav.addStudent"), icon: "+" },
+    { href: "/admin/settings", label: t("nav.siteSettings"), icon: "\u2699" },
+    { href: "/admin/admins", label: t("nav.manageAdmins"), icon: "\u263A" },
   ];
 
   return (
@@ -116,7 +115,7 @@ export default function AdminLayout({
                 letterSpacing: "-0.5px",
               }}
             >
-              NPA Admin
+              {t("nav.brand")}
             </h1>
             <p
               style={{
@@ -125,7 +124,7 @@ export default function AdminLayout({
                 color: "#6b7280",
               }}
             >
-              Student Profile Management
+              {t("nav.subtitle")}
             </p>
           </Link>
         </div>
@@ -166,13 +165,60 @@ export default function AdminLayout({
           })}
         </nav>
 
-        {/* Logout */}
+        {/* Language Toggle + Logout */}
         <div
           style={{
             padding: "12px 8px",
             borderTop: "1px solid #e5e7eb",
           }}
         >
+          {/* Language Toggle */}
+          <div
+            style={{
+              display: "flex",
+              gap: "2px",
+              marginBottom: "8px",
+              padding: "2px",
+              borderRadius: "6px",
+              backgroundColor: "#f3f4f6",
+            }}
+          >
+            <button
+              onClick={() => setLocale("en")}
+              style={{
+                flex: 1,
+                padding: "6px 0",
+                border: "none",
+                borderRadius: "4px",
+                backgroundColor: locale === "en" ? "#ffffff" : "transparent",
+                color: locale === "en" ? "#335D63" : "#6b7280",
+                fontSize: "12px",
+                fontWeight: locale === "en" ? 600 : 400,
+                cursor: "pointer",
+                boxShadow: locale === "en" ? "0 1px 2px rgba(0,0,0,0.05)" : "none",
+              }}
+            >
+              English
+            </button>
+            <button
+              onClick={() => setLocale("pt")}
+              style={{
+                flex: 1,
+                padding: "6px 0",
+                border: "none",
+                borderRadius: "4px",
+                backgroundColor: locale === "pt" ? "#ffffff" : "transparent",
+                color: locale === "pt" ? "#335D63" : "#6b7280",
+                fontSize: "12px",
+                fontWeight: locale === "pt" ? 600 : 400,
+                cursor: "pointer",
+                boxShadow: locale === "pt" ? "0 1px 2px rgba(0,0,0,0.05)" : "none",
+              }}
+            >
+              Portugues
+            </button>
+          </div>
+
           <button
             onClick={handleLogout}
             style={{
@@ -193,7 +239,7 @@ export default function AdminLayout({
             <span style={{ fontSize: "18px", width: "20px", textAlign: "center" }}>
               &larr;
             </span>
-            Logout
+            {t("nav.logout")}
           </button>
         </div>
       </aside>
@@ -212,5 +258,17 @@ export default function AdminLayout({
         </div>
       </main>
     </div>
+  );
+}
+
+export default function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <LanguageProvider>
+      <AdminLayoutInner>{children}</AdminLayoutInner>
+    </LanguageProvider>
   );
 }

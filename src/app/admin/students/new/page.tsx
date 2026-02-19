@@ -3,11 +3,13 @@
 import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useLanguage } from "@/lib/LanguageContext";
 
 const STATUS_OPTIONS = ["active", "graduated", "alumni", "withdrawn"];
 
 export default function NewStudentPage() {
   const router = useRouter();
+  const { t, getStatusLabel } = useLanguage();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -27,7 +29,7 @@ export default function NewStudentPage() {
     setError("");
 
     if (!fullName.trim() || !preferredName.trim() || !dateOfBirth || !homeCommunity.trim()) {
-      setError("Please fill in all required fields.");
+      setError(t("form.required"));
       return;
     }
 
@@ -61,14 +63,14 @@ export default function NewStudentPage() {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error || "Failed to create student.");
+        setError(data.error || t("newStudent.failedCreate"));
         setLoading(false);
         return;
       }
 
       router.push(`/admin/students/${data.id}`);
     } catch {
-      setError("Network error. Please try again.");
+      setError(t("common.networkError"));
       setLoading(false);
     }
   }
@@ -85,11 +87,11 @@ export default function NewStudentPage() {
             fontSize: "14px",
           }}
         >
-          Dashboard
+          {t("nav.dashboard")}
         </Link>
         <span style={{ color: "#d1d5db", margin: "0 8px", fontSize: "14px" }}>/</span>
         <span style={{ color: "#271609", fontSize: "14px", fontWeight: 500 }}>
-          New Student
+          {t("newStudent.breadcrumb")}
         </span>
       </div>
 
@@ -101,7 +103,7 @@ export default function NewStudentPage() {
           color: "#271609",
         }}
       >
-        Add New Student
+        {t("newStudent.title")}
       </h1>
 
       {/* Error */}
@@ -141,7 +143,7 @@ export default function NewStudentPage() {
             {/* Full Name */}
             <div>
               <label style={labelStyle}>
-                Full Name <span style={{ color: "#dc2626" }}>*</span>
+                {t("form.fullName")} <span style={{ color: "#dc2626" }}>*</span>
               </label>
               <input
                 type="text"
@@ -149,14 +151,14 @@ export default function NewStudentPage() {
                 onChange={(e) => setFullName(e.target.value)}
                 required
                 style={inputStyle}
-                placeholder="e.g. Maria Josefa Nhampossa"
+                placeholder={t("newStudent.namePlaceholder")}
               />
             </div>
 
             {/* Preferred Name */}
             <div>
               <label style={labelStyle}>
-                Preferred Name <span style={{ color: "#dc2626" }}>*</span>
+                {t("form.preferredName")} <span style={{ color: "#dc2626" }}>*</span>
               </label>
               <input
                 type="text"
@@ -164,14 +166,14 @@ export default function NewStudentPage() {
                 onChange={(e) => setPreferredName(e.target.value)}
                 required
                 style={inputStyle}
-                placeholder="e.g. Maria"
+                placeholder={t("newStudent.preferredNamePlaceholder")}
               />
             </div>
 
             {/* Date of Birth */}
             <div>
               <label style={labelStyle}>
-                Date of Birth <span style={{ color: "#dc2626" }}>*</span>
+                {t("form.dateOfBirth")} <span style={{ color: "#dc2626" }}>*</span>
               </label>
               <input
                 type="date"
@@ -185,7 +187,7 @@ export default function NewStudentPage() {
             {/* Home Community */}
             <div>
               <label style={labelStyle}>
-                Home Community <span style={{ color: "#dc2626" }}>*</span>
+                {t("form.homeCommunity")} <span style={{ color: "#dc2626" }}>*</span>
               </label>
               <input
                 type="text"
@@ -193,14 +195,14 @@ export default function NewStudentPage() {
                 onChange={(e) => setHomeCommunity(e.target.value)}
                 required
                 style={inputStyle}
-                placeholder="e.g. Machava"
+                placeholder={t("newStudent.communityPlaceholder")}
               />
             </div>
 
             {/* Enrollment Year */}
             <div>
               <label style={labelStyle}>
-                Enrollment Year <span style={{ color: "#dc2626" }}>*</span>
+                {t("form.enrollmentYear")} <span style={{ color: "#dc2626" }}>*</span>
               </label>
               <input
                 type="number"
@@ -216,7 +218,7 @@ export default function NewStudentPage() {
             {/* Enrollment Grade */}
             <div>
               <label style={labelStyle}>
-                Enrollment Grade <span style={{ color: "#dc2626" }}>*</span>
+                {t("form.enrollmentGrade")} <span style={{ color: "#dc2626" }}>*</span>
               </label>
               <select
                 value={enrollmentGrade}
@@ -225,7 +227,7 @@ export default function NewStudentPage() {
               >
                 {Array.from({ length: 12 }, (_, i) => i + 1).map((g) => (
                   <option key={g} value={g}>
-                    Grade {g}
+                    {`${t("form.grade")} ${g}`}
                   </option>
                 ))}
               </select>
@@ -233,7 +235,7 @@ export default function NewStudentPage() {
 
             {/* Status */}
             <div>
-              <label style={labelStyle}>Status</label>
+              <label style={labelStyle}>{t("form.status")}</label>
               <select
                 value={status}
                 onChange={(e) => setStatus(e.target.value)}
@@ -241,7 +243,7 @@ export default function NewStudentPage() {
               >
                 {STATUS_OPTIONS.map((s) => (
                   <option key={s} value={s}>
-                    {s.charAt(0).toUpperCase() + s.slice(1)}
+                    {getStatusLabel(s)}
                   </option>
                 ))}
               </select>
@@ -271,7 +273,7 @@ export default function NewStudentPage() {
                     cursor: "pointer",
                   }}
                 />
-                Visible on public website
+                {t("form.isPublic")}
               </label>
             </div>
           </div>
@@ -300,7 +302,7 @@ export default function NewStudentPage() {
                 cursor: loading ? "not-allowed" : "pointer",
               }}
             >
-              {loading ? "Creating..." : "Create Student"}
+              {loading ? t("newStudent.creating") : t("newStudent.create")}
             </button>
             <button
               type="button"
@@ -316,7 +318,7 @@ export default function NewStudentPage() {
                 cursor: "pointer",
               }}
             >
-              Cancel
+              {t("form.cancel")}
             </button>
           </div>
         </form>

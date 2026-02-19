@@ -2,9 +2,11 @@
 
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { useLanguage } from "@/lib/LanguageContext";
 
 export default function AdminSettingsPage() {
   const router = useRouter();
+  const { t } = useLanguage();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [heroBackgroundUrl, setHeroBackgroundUrl] = useState<string | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -29,7 +31,7 @@ export default function AdminSettingsPage() {
         const data = await res.json();
         setHeroBackgroundUrl(data.heroBackgroundUrl || null);
       } catch {
-        setMessage({ type: "error", text: "Failed to load settings." });
+        setMessage({ type: "error", text: t("settings.failedLoad") });
       } finally {
         setLoading(false);
       }
@@ -77,9 +79,9 @@ export default function AdminSettingsPage() {
       setHeroBackgroundUrl(data.heroBackgroundUrl);
       setSelectedFile(null);
       setPreviewUrl(null);
-      setMessage({ type: "success", text: "Background image updated successfully!" });
+      setMessage({ type: "success", text: t("settings.bgUpdated") });
     } catch (err) {
-      setMessage({ type: "error", text: err instanceof Error ? err.message : "Failed to save settings." });
+      setMessage({ type: "error", text: err instanceof Error ? err.message : t("settings.failedSave") });
     } finally {
       setSaving(false);
     }
@@ -109,9 +111,9 @@ export default function AdminSettingsPage() {
       setSelectedFile(null);
       setPreviewUrl(null);
       if (fileInputRef.current) fileInputRef.current.value = "";
-      setMessage({ type: "success", text: "Background image removed. Default colors will be used." });
+      setMessage({ type: "success", text: t("settings.bgRemoved") });
     } catch {
-      setMessage({ type: "error", text: "Failed to remove background image." });
+      setMessage({ type: "error", text: t("settings.failedRemove") });
     } finally {
       setSaving(false);
     }
@@ -127,7 +129,7 @@ export default function AdminSettingsPage() {
   if (loading) {
     return (
       <div style={{ padding: "60px 0", textAlign: "center", color: "#6b7280", fontSize: "14px" }}>
-        Loading settings...
+        {t("settings.loadingSettings")}
       </div>
     );
   }
@@ -138,10 +140,10 @@ export default function AdminSettingsPage() {
     <div>
       <div style={{ marginBottom: "24px" }}>
         <h1 style={{ margin: 0, fontSize: "24px", fontWeight: 700, color: "#271609" }}>
-          Site Settings
+          {t("settings.title")}
         </h1>
         <p style={{ margin: "4px 0 0", fontSize: "14px", color: "#6b7280" }}>
-          Configure the public-facing homepage
+          {t("settings.subtitle")}
         </p>
       </div>
 
@@ -171,11 +173,10 @@ export default function AdminSettingsPage() {
         }}
       >
         <h2 style={{ margin: "0 0 4px", fontSize: "16px", fontWeight: 600, color: "#271609" }}>
-          Hero Background Image
+          {t("settings.heroTitle")}
         </h2>
         <p style={{ margin: "0 0 20px", fontSize: "13px", color: "#6b7280" }}>
-          This image appears behind the hero section on the homepage. Recommended size: 1920x1080px.
-          If no image is set, the default green color scheme will be used.
+          {t("settings.heroDescription")}
         </p>
 
         {/* Preview */}
@@ -213,7 +214,7 @@ export default function AdminSettingsPage() {
               }}
             >
               <p style={{ color: "#ffffff", fontSize: "18px", fontWeight: 700, textAlign: "center" }}>
-                Meet the girls.
+                {t("settings.heroPreview")}
               </p>
             </div>
             {previewUrl && (
@@ -230,7 +231,7 @@ export default function AdminSettingsPage() {
                   fontWeight: 600,
                 }}
               >
-                UNSAVED
+                {t("settings.unsaved")}
               </div>
             )}
           </div>
@@ -252,10 +253,10 @@ export default function AdminSettingsPage() {
           >
             <div style={{ textAlign: "center" }}>
               <p style={{ color: "#ffffff", fontSize: "18px", fontWeight: 700, margin: "0 0 4px" }}>
-                Meet the girls.
+                {t("settings.heroPreview")}
               </p>
               <p style={{ color: "#6A9A9F", fontSize: "12px", margin: 0 }}>
-                Default green background (no image set)
+                {t("settings.defaultBg")}
               </p>
             </div>
           </div>
@@ -285,7 +286,7 @@ export default function AdminSettingsPage() {
               opacity: saving ? 0.6 : 1,
             }}
           >
-            {heroBackgroundUrl ? "Change Image" : "Upload Image"}
+            {heroBackgroundUrl ? t("settings.changeImage") : t("settings.uploadImage")}
           </button>
 
           {selectedFile && (
@@ -305,7 +306,7 @@ export default function AdminSettingsPage() {
                   opacity: saving ? 0.6 : 1,
                 }}
               >
-                {saving ? "Saving..." : "Save"}
+                {saving ? t("settings.saving") : t("settings.save")}
               </button>
               <button
                 onClick={handleCancel}
@@ -320,7 +321,7 @@ export default function AdminSettingsPage() {
                   cursor: saving ? "not-allowed" : "pointer",
                 }}
               >
-                Cancel
+                {t("form.cancel")}
               </button>
             </>
           )}
@@ -340,7 +341,7 @@ export default function AdminSettingsPage() {
                 opacity: saving ? 0.6 : 1,
               }}
             >
-              {saving ? "Removing..." : "Remove Image"}
+              {saving ? t("settings.removing") : t("settings.removeImage")}
             </button>
           )}
         </div>
