@@ -69,6 +69,7 @@ export default function AdminLayout({
   const navItems = [
     { href: "/admin", label: "Dashboard", icon: "\u2302" },
     { href: "/admin/students/new", label: "Add Student", icon: "+" },
+    { href: "/admin/settings", label: "Site Settings", icon: "\u2699" },
   ];
 
   return (

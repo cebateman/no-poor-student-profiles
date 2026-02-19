@@ -72,3 +72,11 @@ model AdminUser {
 
   @@map("admin_users")
 }
+
+model SiteSettings {
+  id                 String   @id @default("singleton")
+  heroBackgroundUrl  String?
+  updatedAt          DateTime @updatedAt
+
+  @@map("site_settings")
+}
