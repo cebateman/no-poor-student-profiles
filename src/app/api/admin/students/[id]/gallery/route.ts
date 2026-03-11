@@ -14,23 +14,29 @@ export async function POST(
   }
 
   const formData = await request.formData();
-  const file = formData.get("photo") as File;
+  const file = formData.get("photo") as File | null;
   const year = parseInt(formData.get("year") as string) || new Date().getFullYear();
   const caption = formData.get("caption") as string | null;
+  const videoUrl = formData.get("videoUrl") as string | null;
   const isFeatured = formData.get("isFeatured") === "true";
 
-  if (!file) {
-    return NextResponse.json({ error: "No photo provided" }, { status: 400 });
+  if (!file && !videoUrl) {
+    return NextResponse.json({ error: "A photo or video URL is required" }, { status: 400 });
   }
 
-  const buffer = Buffer.from(await file.arrayBuffer());
-  const { full } = await processAndSaveImage(buffer, params.id, year);
+  let photoUrl = "";
+  if (file) {
+    const buffer = Buffer.from(await file.arrayBuffer());
+    const { full } = await processAndSaveImage(buffer, params.id, year);
+    photoUrl = full;
+  }
 
   const entry = await prisma.mediaGallery.create({
     data: {
       studentId: params.id,
       year,
-      photoUrl: full,
+      photoUrl: photoUrl || videoUrl || "",
+      videoUrl: videoUrl || null,
       caption: caption || null,
       isFeatured,
     },

@@ -10,6 +10,7 @@ interface Snapshot {
   year: number;
   gradeAtTime: number;
   photoUrl: string | null;
+  videoUrl: string | null;
   storyText: string | null;
   storyLanguage: string;
   storyTranslation: string | null;
@@ -24,6 +25,7 @@ interface GalleryItem {
   id: string;
   year: number;
   photoUrl: string;
+  videoUrl: string | null;
   caption: string | null;
   isFeatured: boolean;
 }
@@ -801,6 +803,20 @@ export default function StudentDetailPage() {
                         </div>
                       </div>
                     )}
+
+                  {activeSnapshot.videoUrl && (
+                    <div style={{ marginTop: "12px" }}>
+                      <span style={detailLabelStyle}>Video</span>
+                      <a
+                        href={activeSnapshot.videoUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ fontSize: "14px", color: "#335D63" }}
+                      >
+                        {activeSnapshot.videoUrl}
+                      </a>
+                    </div>
+                  )}
                 </div>
               </div>
             )}

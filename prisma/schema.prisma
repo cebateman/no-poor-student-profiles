@@ -35,6 +35,7 @@ model AnnualSnapshot {
   year             Int
   gradeAtTime      Int
   photoUrl         String?
+  videoUrl         String?  // YouTube or Vimeo link
   storyText        String?
   storyLanguage    String   @default("Portuguese")
   storyTranslation String?
@@ -55,6 +56,7 @@ model MediaGallery {
   studentId  String
   year       Int
   photoUrl   String
+  videoUrl   String?  // YouTube or Vimeo link
   caption    String?
   isFeatured Boolean @default(false)
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { SnapshotData } from "@/lib/computed";
+import VideoEmbed from "./VideoEmbed";
 
 export default function JourneyTimeline({
   snapshots,
@@ -67,6 +68,13 @@ export default function JourneyTimeline({
                   )}
                 </div>
               </div>
+
+              {/* Video embed */}
+              {snapshot.videoUrl && (
+                <div className="mt-4">
+                  <VideoEmbed url={snapshot.videoUrl} />
+                </div>
+              )}
             </div>
           </div>
         ))}

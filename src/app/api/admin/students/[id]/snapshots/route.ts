@@ -23,6 +23,7 @@ export async function POST(
   const favoriteSubject = formData.get("favoriteSubject") as string | null;
   const academicNotes = formData.get("academicNotes") as string | null;
   const extraDataStr = formData.get("extraData") as string | null;
+  const videoUrl = formData.get("videoUrl") as string | null;
   const photo = formData.get("photo") as File | null;
 
   if (!year || !gradeAtTime) {
@@ -45,6 +46,7 @@ export async function POST(
       year,
       gradeAtTime,
       photoUrl,
+      videoUrl: videoUrl || null,
       storyText: storyText || null,
       storyLanguage,
       storyTranslation: storyTranslation || null,

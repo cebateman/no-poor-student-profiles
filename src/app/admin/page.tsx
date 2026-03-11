@@ -111,21 +111,38 @@ export default function AdminDashboardPage() {
             {filteredStudents.length} {filteredStudents.length !== 1 ? t("dashboard.studentCountPlural") : t("dashboard.studentCount")} {t("dashboard.found")}
           </p>
         </div>
-        <button
-          onClick={() => router.push("/students/new")}
-          style={{
-            padding: "10px 20px",
-            border: "none",
-            borderRadius: "8px",
-            backgroundColor: "#335D63",
-            color: "#ffffff",
-            fontSize: "14px",
-            fontWeight: 600,
-            cursor: "pointer",
-          }}
-        >
-          {t("dashboard.addNew")}
-        </button>
+        <div style={{ display: "flex", gap: "10px" }}>
+          <button
+            onClick={() => router.push("/import")}
+            style={{
+              padding: "10px 20px",
+              border: "1px solid #335D63",
+              borderRadius: "8px",
+              backgroundColor: "#ffffff",
+              color: "#335D63",
+              fontSize: "14px",
+              fontWeight: 600,
+              cursor: "pointer",
+            }}
+          >
+            CSV Import
+          </button>
+          <button
+            onClick={() => router.push("/students/new")}
+            style={{
+              padding: "10px 20px",
+              border: "none",
+              borderRadius: "8px",
+              backgroundColor: "#335D63",
+              color: "#ffffff",
+              fontSize: "14px",
+              fontWeight: 600,
+              cursor: "pointer",
+            }}
+          >
+            {t("dashboard.addNew")}
+          </button>
+        </div>
       </div>
 
       {/* Filter Bar */}

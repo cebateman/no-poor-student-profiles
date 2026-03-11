@@ -185,6 +185,11 @@ const translations = {
   "admins.confirmDelete": { en: "Are you sure you want to delete this admin?", pt: "Tem certeza que deseja eliminar este admin?" },
   "admins.cannotDeleteSelf": { en: "You cannot delete your own account.", pt: "Não pode eliminar a sua própria conta." },
 
+  // ── CSV Import ──
+  "import.breadcrumb": { en: "Import Students", pt: "Importar Alunas" },
+  "import.title": { en: "CSV Bulk Import", pt: "Importação CSV em Massa" },
+  "import.csvImport": { en: "CSV Import", pt: "Importar CSV" },
+
   // ── Common ──
   "common.networkError": { en: "Network error. Please try again.", pt: "Erro de rede. Tente novamente." },
   "common.unauthorized": { en: "Unauthorized", pt: "Não autorizado" },

@@ -32,6 +32,7 @@ export default function SnapshotFormPage() {
   const [dreamCareer, setDreamCareer] = useState("");
   const [favoriteSubject, setFavoriteSubject] = useState("");
   const [academicNotes, setAcademicNotes] = useState("");
+  const [videoUrl, setVideoUrl] = useState("");
   const [customFields, setCustomFields] = useState<CustomField[]>([]);
 
   function handlePhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -104,6 +105,9 @@ export default function SnapshotFormPage() {
       }
       if (academicNotes.trim()) {
         formData.append("academicNotes", academicNotes.trim());
+      }
+      if (videoUrl.trim()) {
+        formData.append("videoUrl", videoUrl.trim());
       }
 
       // Build extraData from custom fields
@@ -304,6 +308,21 @@ export default function SnapshotFormPage() {
                 />
               </label>
             </div>
+          </div>
+
+          {/* Video URL */}
+          <div style={{ marginBottom: "24px" }}>
+            <label style={labelStyle}>Video URL (YouTube or Vimeo)</label>
+            <input
+              type="url"
+              value={videoUrl}
+              onChange={(e) => setVideoUrl(e.target.value)}
+              placeholder="e.g. https://www.youtube.com/watch?v=..."
+              style={inputStyle}
+            />
+            <p style={{ margin: "4px 0 0", fontSize: "12px", color: "#9ca3af" }}>
+              Paste a YouTube or Vimeo link to embed a video in this snapshot.
+            </p>
           </div>
 
           {/* Story Section */}

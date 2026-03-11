@@ -48,6 +48,7 @@ export interface SnapshotData {
   year: number;
   gradeAtTime: number;
   photoUrl: string | null;
+  videoUrl: string | null;
   storyText: string | null;
   storyLanguage: string;
   storyTranslation: string | null;
@@ -63,6 +64,7 @@ export interface GalleryData {
   studentId: string;
   year: number;
   photoUrl: string;
+  videoUrl: string | null;
   caption: string | null;
   isFeatured: boolean;
 }
